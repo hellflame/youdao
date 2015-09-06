@@ -27,8 +27,8 @@ def pre_check(func):
             print ("未获取到所查内容!")
         elif self.data.get('errorCode', ''):
             print ("返回码错误!")
-        elif 'web' not in self.data and 'basic' not in self.data and 'translation' not in self.data\
-                or len(self.data['translation']) == 1 and self.data['translation'][0] == self.data['query']:
+        elif 'web' not in self.data and 'basic' not in self.data\
+                and (len(self.data['translation']) == 1 and self.data['translation'][0] == self.data['query']):
             print("米有发现﹃_﹃ \033[01;31m{}\033[00m ﹄_﹄这个单词额".format(self.data['query']))
         else:
             return func(self, * args)
@@ -51,7 +51,7 @@ class Youdao:
         temp = ""
         if "web" not in self.data:
             return temp
-        temp += "网络释义 >>>\n"
+        temp += "网络释义 \033[01;34m>>>\033[00m\n"
         for i in self.data['web']:
             temp += '\t' + i['key'] + '\n\t'
             for j in i['value']:
@@ -65,7 +65,7 @@ class Youdao:
         temp = ""
         if 'translation' not in self.data:
             return temp
-        temp += '翻译 >>>\n'
+        temp += '翻译 \033[01;33m>>>\033[00m\n'
         for i in self.data['translation']:
             temp += '\t' + i + '\n'
         return temp
@@ -77,7 +77,7 @@ class Youdao:
         data = self.data.get('basic', '')
         if not data:
             return temp
-        temp += "基本释义 >>>\n"
+        temp += "基本释义 \033[01;32m>>>\033[00m\n"
         phonetic = data.get('phonetic', '')
         us_phonetic = data.get('us-phonetic', '')
         uk_phonetic = data.get('uk-phonetic', '')
@@ -111,9 +111,9 @@ class Youdao:
             print type(e)
         return None
 
+    @pre_check
     def sum_up(self, basic=True, web=False, trans=False):
-        
-        temp = "{}\n".format(self.data['query'])
+        temp = "\033[01;31m{}\033[00m\n".format(self.data['query'])
         pitch = False
         if basic and self.has_basic:
             temp += self.basic()
@@ -137,7 +137,7 @@ def arg_piper():
     argv = sys.argv
     argc = len(argv)
     spit = {
-        'basic': True,
+        'basic': False,
         'web': False,
         'trans': False,
         'help': False,
@@ -147,7 +147,14 @@ def arg_piper():
         spit['help'] = True
         return spit
     if argc >= 2:
+        mark = True
         if argc == 3:
+            for i in argv:
+                if i in ('--basic', '--trans', '--translate',
+                         '--help', '--web'):
+                    mark = False
+                    break
+        if mark and argc == 3:
             simple = {
                 'b': 'basic',
                 'w': 'web',
@@ -155,12 +162,14 @@ def arg_piper():
                 't': 'trans'
             }
             for i in argv[1:3]:
-                if i.startswith('-'):
+                if i.startswith('-') and len(i) >= 2 and not i.startswith('--'):
                     for j in i[1:]:
                         if j in simple:
                             spit[simple[j]] = True
                 else:
                     spit['word'] = i
+            if not spit['web'] and not spit['trans'] and not spit['basic']:
+                spit['basic'] = True
             return spit
         else:
             for i in argv[1:]:
@@ -169,14 +178,16 @@ def arg_piper():
                 else:
                     if i in keymap:
                         spit[keymap[i]] = True
+            if not spit['web'] and not spit['trans'] and not spit['basic']:
+                spit['basic'] = True
             return spit
 
 
 def help_():
-    help_str = "deploy like this\n\tyoudao word | [-wbt] [-w | --web] [-b | --basic ...] [-t] ..."
-    help_str += "\n\t" + "-b or --basic => 返回结果中将带有基本释义,若无基本释义则此选项无效,此选项在主函数调用时为默认选项"
-    help_str += "\n\t" + "-w or --web => 返回结果中将带有网络释义,若无网络释义则选项无效"
-    help_str += "\n\t" + "-t or --trans or --translate => 返回结果中将带有翻译, 若无翻译则此选项无效"
+    help_str = "deploy like this\n\tyoudao word | [-wbt] [-w | --web] [-b | --basic ...] [-t] ...\n"
+    help_str += "\n\t" + "-b or --basic => 返回结果中将带有基本释义,为默认选项"
+    help_str += "\n\t" + "-w or --web => 返回结果中将带有网络释义"
+    help_str += "\n\t" + "-t or --trans or --translate => 返回结果中将带有翻译"
     print help_str
 
 
@@ -188,6 +199,7 @@ def main():
     if args['help']:
         return help_()
     youdao = Youdao(args['word'])
+#    print args
     result = youdao.sum_up(args['basic'], args['web'], args['trans'])
     if result:
         print(result)
