@@ -1,5 +1,16 @@
 *.pyc
 .idea
-YoudaoDict.egg-info
+#packages
+
+*.egg
+*.egg-info
 dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+YoudaoDict-1.0
 
