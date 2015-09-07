@@ -1,3 +1,5 @@
 *.pyc
-idea
+.idea
+YoudaoDict.egg-info
+dist
 
