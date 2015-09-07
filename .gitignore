@@ -12,5 +12,5 @@ bin
 var
 sdist
 develop-eggs
-YoudaoDict-1.0
+YoudaoDict.egg-info
 
