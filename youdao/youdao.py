@@ -6,8 +6,25 @@ sys.setdefaultencoding('utf8')
 from urllib import quote
 from urllib2 import urlopen, URLError
 from json import loads
-key_from = 'privateDict'
-key = '1971137497'
+from random import choice
+My_keys = [
+    {
+        'key': '1971137497',
+        'key_from': 'privateDict'
+    },
+    {
+        'key': '1189092886',
+        'key_from': 'hellflame'
+    },
+    {
+        'key': '623990957',
+        'key_from': 'hellflamedns'
+    },
+    {
+        'key': '93848407',
+        'key_from': 'hellflameyoudao'
+    }
+]
 keymap = {
     '-h': 'help',
     '--help': 'help',
@@ -33,6 +50,11 @@ def pre_check(func):
         else:
             return func(self, * args)
     return _dec
+
+chs = choice(My_keys)
+
+key_from = chs['key_from']
+key = chs['key']
 
 
 class Youdao:
