@@ -206,10 +206,11 @@ def arg_piper():
 
 
 def help_():
-    help_str = "deploy like this\n\tyoudao word | [-wbt] [-w | --web] [-b | --basic ...] [-t] ...\n"
-    help_str += "\n\t" + "-b or --basic => 返回结果中将带有基本释义,为默认选项"
-    help_str += "\n\t" + "-w or --web => 返回结果中将带有网络释义"
-    help_str += "\n\t" + "-t or --trans or --translate => 返回结果中将带有翻译"
+    help_str = "deploy like this\n\tyoudao 'the sentence you don't know'\n\t" \
+               "youdao 中文\n\tyoudao linux -wtb\n\tyoudao hellflame --trans\n\tyoudao -w hehe \n\t...\n"
+    help_str += "\n\t" + "-b or\n\t\t --basic => 返回结果中将带有基本释义,为默认选项"
+    help_str += "\n\t" + "-w or\n\t\t --web => 返回结果中将带有网络释义"
+    help_str += "\n\t" + "-t or\n\t\t --trans \n\t\t --translate => 返回结果中将带有翻译"
     print help_str
 
 
@@ -229,11 +230,7 @@ def main():
         print('')
 
 if __name__ == '__main__':
-    from json import dumps
-#    tester = Youdao("中文")
     main()
-
-#    print dumps(tester.data, indent=2)
 
 
 
