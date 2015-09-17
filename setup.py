@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='YoudaoDict',
-    version="1.1.3",
+    version="1.1.4",
     keywords=('Youdao', 'youdao', 'dict', 'youdao api'),
     description="适用于在linux or mac 终端通过有道api查询单词或者翻译词句",
     license='MIT License',
