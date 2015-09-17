@@ -173,7 +173,7 @@ def arg_piper():
         if argc == 3:
             for i in argv:
                 if i in ('--basic', '--trans', '--translate',
-                         '--help', '--web'):
+                         '--help', '--web', '--all'):
                     mark = False
                     break
         if mark and argc == 3:
@@ -186,6 +186,10 @@ def arg_piper():
             for i in argv[1:3]:
                 if i.startswith('-') and len(i) >= 2 and not i.startswith('--'):
                     for j in i[1:]:
+                        if 'a' in j:
+                            spit['basic'] = True
+                            spit['web'] = True
+                            spit['trans'] = True
                         if j in simple:
                             spit[simple[j]] = True
                 else:
@@ -198,6 +202,10 @@ def arg_piper():
                 if not i.startswith('-'):
                     spit['word'] = i
                 else:
+                    if i == '--all':
+                        spit['basic'] = True
+                        spit['web'] = True
+                        spit['trans'] = True
                     if i in keymap:
                         spit[keymap[i]] = True
             if not spit['web'] and not spit['trans'] and not spit['basic']:
@@ -211,6 +219,7 @@ def help_():
     help_str += "\n\t" + "-b or\n\t\t --basic => 返回结果中将带有基本释义,为默认选项"
     help_str += "\n\t" + "-w or\n\t\t --web => 返回结果中将带有网络释义"
     help_str += "\n\t" + "-t or\n\t\t --trans \n\t\t --translate => 返回结果中将带有翻译"
+    help_str += "\n\t" + "-a or\n\t\t --all => 输出所有查询内容,相当于 -wbt 等\n"
     print help_str
 
 
