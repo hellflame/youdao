@@ -163,7 +163,7 @@ def arg_piper():
         'web': False,
         'trans': False,
         'help': False,
-        'word': None
+        'word': ''
     }
     if argc == 1:
         spit['help'] = True
@@ -193,14 +193,14 @@ def arg_piper():
                         if j in simple:
                             spit[simple[j]] = True
                 else:
-                    spit['word'] = i
+                    spit['word'] += i + ' '
             if not spit['web'] and not spit['trans'] and not spit['basic']:
                 spit['basic'] = True
             return spit
         else:
             for i in argv[1:]:
                 if not i.startswith('-'):
-                    spit['word'] = i
+                    spit['word'] += i + ' '
                 else:
                     if i == '--all':
                         spit['basic'] = True
@@ -214,7 +214,7 @@ def arg_piper():
 
 
 def help_():
-    help_str = "deploy like this\n\tyoudao \"the sentence you don't know\"\n\t" \
+    help_str = "deploy like this\n\tyoudao the sentence you don\\'t know\n\t" \
                "youdao 中文\n\tyoudao linux -wtb\n\tyoudao hellflame --trans\n\tyoudao -w hehe \n\t...\n"
     help_str += "\n\t" + "-b or\n\t\t --basic => 返回结果中将带有基本释义,为默认选项"
     help_str += "\n\t" + "-w or\n\t\t --web => 返回结果中将带有网络释义"
