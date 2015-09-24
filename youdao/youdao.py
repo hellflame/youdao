@@ -130,7 +130,7 @@ class Youdao:
         except URLError:
             print("网络连接故障")
         except Exception, e:
-            print type(e)
+            print (type(e))
         return None
 
     @pre_check
@@ -220,7 +220,7 @@ def help_():
     help_str += "\n\t" + "-w or\n\t\t --web => 返回结果中将带有网络释义"
     help_str += "\n\t" + "-t or\n\t\t --trans \n\t\t --translate => 返回结果中将带有翻译"
     help_str += "\n\t" + "-a or\n\t\t --all => 输出所有查询内容,相当于 -wbt 等\n"
-    print help_str
+    print (help_str)
 
 
 def main():
@@ -231,7 +231,6 @@ def main():
     if args['help']:
         return help_()
     youdao = Youdao(args['word'])
-#    print args
     result = youdao.sum_up(args['basic'], args['web'], args['trans'])
     if result:
         print(result)
