@@ -1,11 +1,11 @@
 # coding=utf8
+from setuptools import setup, find_packages
 __author__ = 'hellflame'
 
-from setuptools import setup, find_packages
 
 setup(
     name='YoudaoDict',
-    version="1.1.5.2",
+    version="1.1.6.0",
     keywords=('Youdao', 'youdao', 'dict', 'youdao api'),
     description="适用于在linux or mac 终端通过有道api查询单词或者翻译词句",
     license='MIT',
