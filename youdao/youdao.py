@@ -118,7 +118,11 @@ class Youdao:
     def init_data(self):
         try:
             handle = urlopen(self.data_url, timeout=3)
-            reader = loads(handle.read())
+            reader = handle.read()
+            if not reader:
+                print("获取失败")
+                exit(1)
+            reader = loads(reader)
             handle.close()
             if 'basic' in reader:
                 self.has_basic = True
