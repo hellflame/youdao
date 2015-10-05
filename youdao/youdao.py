@@ -118,11 +118,7 @@ class Youdao:
     def init_data(self):
         try:
             handle = urlopen(self.data_url, timeout=3)
-            reader = handle.read()
-            if not reader:
-                print("获取失败")
-                exit(1)
-            reader = loads(reader)
+            reader = loads(handle.read())
             handle.close()
             if 'basic' in reader:
                 self.has_basic = True
@@ -133,6 +129,8 @@ class Youdao:
             return reader
         except URLError:
             print("网络连接故障")
+        except ValueError:
+            print("数据获取失败")
         except Exception, e:
             print (type(e))
         return None
