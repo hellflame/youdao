@@ -1,12 +1,16 @@
 # coding=utf8
-__author__ = "hellflame"
 import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
 from urllib import quote
 from urllib2 import urlopen, URLError
-from json import loads
+from json import loads, dumps
 from random import choice
+from instantDB.controller import Controller
+from os import popen
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+__author__ = "hellflame"
+
 My_keys = [
     {
         'key': '1971137497',
@@ -38,6 +42,9 @@ keymap = {
     }
 
 
+DB_PATH = "{}/.youdao".format(popen("echo -n ~").read())
+
+
 def pre_check(func):
     def _dec(self, * args):
         if not self.data:
@@ -48,6 +55,8 @@ def pre_check(func):
                 and (len(self.data['translation']) == 1 and self.data['translation'][0] == self.data['query']):
             print("米有发现﹃_﹃ \033[01;31m{}\033[00m ﹄_﹄这个单词额".format(self.data['query']))
         else:
+            if not self.DB.search(self.target):
+                self.DB.insert(self.target, dumps(self.data))
             return func(self, * args)
     return _dec
 
@@ -61,9 +70,11 @@ class Youdao:
     def __init__(self, word, private_key_from=key_from, private_key=key):
         self.data_url = "http://fanyi.youdao.com/openapi.do?keyfrom={}&key={}&type=data&doctype=json&version=1.1&q={}".\
             format(private_key_from, private_key, quote(word))
+        self.target = word
         self.has_basic = False
         self.has_web = False
         self.has_trans = False
+        self.DB = Controller(data_dir=DB_PATH)
         self.data = self.init_data()
         self.result = False
 
@@ -117,9 +128,13 @@ class Youdao:
 
     def init_data(self):
         try:
-            handle = urlopen(self.data_url, timeout=3)
-            reader = loads(handle.read())
-            handle.close()
+            result = self.DB.search(self.target)
+            if result:
+                reader = result
+            else:
+                handle = urlopen(self.data_url, timeout=3)
+                reader = loads(handle.read())
+                handle.close()
             if 'basic' in reader:
                 self.has_basic = True
             if 'web' in reader:

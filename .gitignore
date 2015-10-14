@@ -1,17 +1,12 @@
+# build tools clean
 *.pyc
 .idea
-#packages
 
-*.egg
+# sdist clean
 *.egg-info
 dist
 README
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-YoudaoDict-1.1.2
+
+# local test database
+youdaodict
 
