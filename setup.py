@@ -5,7 +5,7 @@ __author__ = 'hellflame'
 
 setup(
     name='YoudaoDict',
-    version="2.0.0",
+    version="2.0.1",
     keywords=('Youdao', 'youdao', 'dict', 'youdao api'),
     description="适用于在linux or mac 终端通过有道api查询单词或者翻译词句",
     license='MIT',
@@ -16,7 +16,7 @@ setup(
         'youdao'
     ],
     install_requires=[
-        'instantDB==0.0.8'
+        'instantDB>=0.0.8'
     ],
     platforms="linux, mac os",
     classifiers=[
