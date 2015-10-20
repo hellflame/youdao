@@ -42,7 +42,7 @@ keymap = {
     }
 
 
-DB_PATH = "{}/.youdao".format(popen("echo -n ~").read())
+DB_PATH = "{}/.youdao".format(popen("echo $HOME").read().strip())
 
 
 def pre_check(func):
