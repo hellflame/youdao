@@ -5,7 +5,7 @@ __author__ = 'hellflame'
 
 setup(
     name='YoudaoDict',
-    version="2.0.1",
+    version="2.0.2",
     keywords=('Youdao', 'youdao', 'dict', 'youdao api'),
     description="适用于在linux or mac 终端通过有道api查询单词或者翻译词句",
     license='MIT',
