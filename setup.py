@@ -1,22 +1,20 @@
 # coding=utf8
-from setuptools import setup
+from setuptools import setup, find_packages
 __author__ = 'hellflame'
 
 
 setup(
     name='YoudaoDict',
-    version="2.0.2",
+    version="3.0.0",
     keywords=('Youdao', 'youdao', 'dict', 'youdao api'),
     description="适用于在linux or mac 终端通过有道api查询单词或者翻译词句",
     license='MIT',
     author='hellflame',
     author_email='hellflamedly@gmail.com',
     url="https://github.com/hellflame/youdao",
-    packages=[
-        'youdao'
-    ],
+    packages=find_packages(),
     install_requires=[
-        'instantDB>=0.0.8'
+        'paramseeker>=0.3'
     ],
     platforms="linux, mac os",
     classifiers=[
@@ -24,14 +22,13 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.4',
         "Environment :: Console",
-        "Operating System :: MacOS",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: POSIX :: Linux"
+        'Operating System :: OS Independent'
     ],
     entry_points={
         'console_scripts': [
-            'youdao=youdao.youdao:main'
+            'youdao=youdao.run:runner'
         ]
     }
 )
