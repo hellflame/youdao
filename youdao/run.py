@@ -16,7 +16,7 @@ keys = [
         'key_from': 'hellflame'
     }
 ]
-config = Config(os.environ['HOME'] + '/.youdao/config.json', {'keys': keys})
+config = Config(os.path.expanduser('~') + '/.youdao/config.json', {'keys': keys})
 my_config = config.load()['keys']
 chosen = choice(my_config)
 youdao = Youdao(private_key=chosen['key'], private_key_from=chosen['key_from'])

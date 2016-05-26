@@ -5,7 +5,7 @@ __author__ = 'hellflame'
 
 setup(
     name='YoudaoDict',
-    version="3.0.0",
+    version="3.0.1",
     keywords=('Youdao', 'youdao', 'dict', 'youdao api'),
     description="适用于在linux or mac 终端通过有道api查询单词或者翻译词句",
     license='MIT',
@@ -16,7 +16,7 @@ setup(
     install_requires=[
         'paramseeker>=0.3'
     ],
-    platforms="linux, mac os",
+    platforms="linux, max os",
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
@@ -24,7 +24,8 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
         "Environment :: Console",
-        'Operating System :: OS Independent'
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: POSIX'
     ],
     entry_points={
         'console_scripts': [
