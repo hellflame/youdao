@@ -1,36 +1,71 @@
 # coding=utf8
+import os
 import sys
 import json
+import sqlite3
+import random
+__author__ = "hellflame"
 
 if sys.version_info.major == 2:
     from urllib2 import urlopen, URLError
-    from urllib import quote
+    from urllib import quote, unquote
     reload(sys)
     sys.setdefaultencoding('utf8')
 else:
-    from urllib.request import urlopen, URLError, quote
+    from urllib.request import urlopen, URLError, quote, unquote
+
+default_keys = (('1971137497', 'privateDict'),
+                ('1189092886', 'hellflame'),
+                ('623990957', 'hellflamedns'))
 
 
-__author__ = "hellflame"
+def db_ok(function):
+    def func_wrapper(self, *args, **kwargs):
+        if self.db and self.cursor:
+            return function(self, *args, **kwargs)
+    return func_wrapper
+
+
+def cache(function):
+    def func_wrapper(self):
+        if len(self.phrase) > self.status.MAX_QUERY_LENGTH:
+            # print "TOO LONG"
+            return function(self)
+        data = self.status.query(self.phrase)
+        if data:
+            # print "CACHE FOUND"
+            self.result = json.loads(data)
+            return self.result
+        else:
+            # print "CACHING ..."
+            data = function(self)
+            if data['errorCode'] == 0:
+                self.status.up_set(self.phrase, json.dumps(data))
+                return data
+            else:
+                print "Invalid key pair found !!!\n\nkey: {}\nfrom: {}\n".format(self.key, self.key_from)
+                return ''
+    return func_wrapper
 
 
 class Youdao:
-    def __init__(self, phrase='', private_key_from='', private_key=''):
+    def __init__(self, phrase='', db_path=''):
         self.data_url = "http://fanyi.youdao.com/openapi.do?keyfrom={}&key={}&type=data&doctype=json&version=1.1&q={}"
         self.phrase = phrase
-        self.key_from = private_key_from
-        self.key = private_key
         self.result = {}
         self.valid = True
+        self.raw = ''
+        if not db_path:
+            self.db_path = os.path.expanduser('~') + '/.youdao.sqlite3.db'
+        else:
+            self.db_path = db_path
+        self.status = Status(self.db_path)
+        key = self.status.get_API_key()
+        self.key = key[0]
+        self.key_from = key[1]
 
     def set_phrase(self, phrase):
         self.phrase = phrase
-
-    def set_key(self, key):
-        self.key = key
-
-    def set_from(self, key_from):
-        self.key_from = key_from
 
     def valid_check(self):
         if 'translation' not in self.result or \
@@ -39,10 +74,19 @@ class Youdao:
             return False
         return True
 
+    @cache
     def executor(self):
+        return self.executor_without_cache()
+
+    def executor_without_cache(self):
+        """
+        if there is no need to use a cache, use this method directly
+        :return:
+        """
         try:
             data_url = self.data_url.format(self.key_from, self.key, quote(self.phrase))
-            self.result = json.loads(urlopen(data_url, timeout=3).read().decode('utf8'))
+            self.raw = urlopen(data_url, timeout=3).read().decode('utf8')
+            self.result = json.loads(self.raw)
             self.valid_check()
             return self.result
         except URLError:
@@ -101,10 +145,136 @@ class Youdao:
         return temp
 
 
+class Status:
+    def __init__(self, db_path):
+        """
+        Databases to save Youdao queries
+        :param db_path: SQLite3 file db path
+
+        # TODO: data compress
+        """
+        self.db_path = db_path
+        self.db = None
+        self.cursor = None
+        self.QUERY = 'query'
+        self.BASIC = 'basic'
+        self.TRANSLATION = 'translation'
+        self.WEB = 'web'
+        self.API = 'API_keys'
+        self.MAX_QUERY_LENGTH = 50
+        self.init_db()
+
+    def init_db(self):
+        try:
+            self.db = sqlite3.connect(self.db_path)
+            self.cursor = self.db.cursor()
+            # TODO: save more specific data rather than big json string
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS `{}` ("
+                                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                                "query varchar({}) NOT NULL UNIQUE,"
+                                "{} TEXT NOT NULL DEFAULT '',"
+                                "{} TEXT NOT NULL DEFAULT '',"
+                                "{} TEXT NOT NULL DEFAULT '',"
+                                "raw_json TEXT NOT NULL DEFAULT '')".format(
+                                    self.QUERY,
+                                    self.MAX_QUERY_LENGTH,
+                                    self.BASIC,
+                                    self.WEB,
+                                    self.TRANSLATION))
+
+            # customize API keys
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS `{}` ("
+                                "key VARCHAR(20) NOT NULL PRIMARY KEY,"
+                                "value VARCHAR(30) NOT NULL )".format(self.API))
+        except Exception as e:
+            print e
+
+    @db_ok
+    def set_API_key(self, key, value):
+        self.cursor.execute("select * from `{}` WHERE key = '{}' and value = '{}'".format(self.API, key, value))
+        result = self.cursor.fetchone()
+        if not result:
+            self.cursor.execute("insert into `{}` VALUES ('{}', '{}')".format(self.API, key, value))
+            return False
+        return True
+
+    @db_ok
+    def remove_API_key(self, key):
+        try:
+            self.cursor.execute("delete from `{}` WHERE key = '{}'".format(self.API, key))
+        except Exception as e:
+            print e
+
+    @db_ok
+    def get_API_key(self, key=''):
+        if key:
+            self.cursor.execute("select value from {} WHERE key = '{}'".format(self.API, key))
+            result = self.cursor.fetchone()
+            if result:
+                return [key, result[0]]
+        self.cursor.execute("select key, value from {}".format(self.API))
+        result = self.cursor.fetchall()
+        if not result:
+            return random.choice(default_keys)
+        else:
+            return random.choice(result)
+
+    @db_ok
+    def query(self, query):
+        self.cursor.execute("select raw_json from {} "
+                            "WHERE query = '{}' ".format(self.QUERY, query))
+        result = self.cursor.fetchone()
+        if result:
+            # don't forget to decode the SQL safe string
+            return unquote(result[0])
+        return None
+
+    @db_ok
+    def up_set(self, query, raw_json):
+        # TODO: `update` or `insert` without status check for laziness
+        self.cursor.execute("select id from {} WHERE query = '{}' ".format(self.QUERY, query))
+        result = self.cursor.fetchone()
+        # don't forgot to decode
+        data = json.loads(unquote(raw_json))
+        # in order to avoid some SQL syntax error, encode them into some safer string
+        fetch = (quote(json.dumps(data.get(self.BASIC, ''))),
+                 quote(json.dumps(data.get(self.WEB, ''))),
+                 quote(json.dumps(data.get(self.TRANSLATION), '')))
+        if result:
+            self.cursor.execute("update {} set "
+                                "raw_json='{}', "
+                                "{} = '{}',"
+                                "{} = '{}',"
+                                "{} = '{}' WHERE id = {}".format(self.QUERY,
+                                                                 quote(raw_json),
+                                                                 self.BASIC, fetch[0],
+                                                                 self.WEB, fetch[1],
+                                                                 self.TRANSLATION, fetch[2],
+                                                                 result[0]))
+        else:
+            self.cursor.execute("""insert into {} (query, raw_json, {}, {}, {}) VALUES
+                               ('{}', '{}', '{}', '{}', '{}')""".format(
+                                    self.QUERY,
+                                    self.BASIC,
+                                    self.WEB,
+                                    self.TRANSLATION,
+                                    query,
+                                    quote(raw_json),
+                                    fetch[0],
+                                    fetch[1],
+                                    fetch[2]
+                                ))
+
+    def __del__(self):
+        if self.db:
+            self.db.commit()
+            self.db.close()
+
 if __name__ == '__main__':
-    youdao = Youdao('中文', 'hellflamedns', '623990957')
-    youdao.executor()
-    print(youdao.check_raw())
+    youdao = Youdao('fox')
+    print youdao.executor()
+
+    # print youdao.raw
     # print(youdao.web())
     # print(youdao.trans())
     # print(youdao.basic())

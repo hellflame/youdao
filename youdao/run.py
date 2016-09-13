@@ -1,26 +1,9 @@
 # coding=utf8
 from youdao import Youdao
 from paramSeeker import ParamSeeker
-from util.config import Config
-import os
-from random import choice
 
 seeker = ParamSeeker()
-keys = [
-    {
-        'key': '1971137497',
-        'key_from': 'privateDict'
-    },
-    {
-        'key': '1189092886',
-        'key_from': 'hellflame'
-    }
-]
-config = Config(os.path.expanduser('~') + '/.youdao/config.json', {'keys': keys})
-my_config = config.load()['keys']
-chosen = choice(my_config)
-youdao = Youdao(private_key=chosen['key'], private_key_from=chosen['key_from'])
-
+youdao = Youdao()
 
 seeker.set_desc('终端翻译小工具')
 seeker.set_usage_desc('youdao 中文')
@@ -34,16 +17,21 @@ seeker.set_usage_desc('youdao who --trans')
 def add_keys(wanted):
     data = wanted.split(' ')
     if len(data) == 2:
-        my_config.append({
-            'key': data[0],
-            'key_from': data[1]
-        })
-        config.config = {
-            'keys': my_config
-        }
-        config.save()
+        youdao.status.set_API_key(data[0], data[1])
+        print ("add key pair done, it keys error, use --remove")
     else:
         print("input two values")
+    exit(0)
+
+
+@seeker.seek('--remove', extra={'desc': 'remove broken keys'})
+def add_keys(wanted):
+    data = wanted.split(' ')
+    if len(data) == 1:
+        youdao.status.remove_API_key(data[0])
+        print ("remove key pair done")
+    else:
+        print("tell me the key name ")
     exit(0)
 
 
@@ -74,20 +62,6 @@ def web(wanted):
 def debug_mode(wanted):
     youdao.set_phrase(wanted)
     return youdao.check_raw()
-
-"""
-@seeker.seek('--store', short='-s', extra={'desc': 'enable storage, options: yes/no'})
-def enable_storage(wanted):
-    if wanted.lower() == 'yes':
-        config.config['storage'] = True
-    elif wanted.lower() == 'no':
-        config.config['storage'] = False
-    else:
-        print("[yes] or [no] is wanted")
-        exit(1)
-    config.save()
-    return ''
-"""
 
 
 def runner():

@@ -5,8 +5,8 @@ __author__ = 'hellflame'
 
 setup(
     name='YoudaoDict',
-    version="3.0.1",
-    keywords=('Youdao', 'youdao', 'dict', 'youdao api'),
+    version="3.1.0",
+    keywords=('Youdao', 'youdao', 'dict', 'youdao api', 'partly offset dict'),
     description="适用于在linux or mac 终端通过有道api查询单词或者翻译词句",
     license='MIT',
     author='hellflame',
@@ -16,9 +16,9 @@ setup(
     install_requires=[
         'paramseeker>=0.3'
     ],
-    platforms="linux, max os",
+    platforms="UNIX like",
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.7',
