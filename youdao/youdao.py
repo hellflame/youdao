@@ -43,7 +43,7 @@ def cache(function):
                 self.status.up_set(self.phrase, json.dumps(data))
                 return data
             else:
-                print "Invalid key pair found !!!\n\nkey: {}\nfrom: {}\n".format(self.key, self.key_from)
+                print ("Invalid key pair found !!!\n\nkey: {}\nfrom: {}\n".format(self.key, self.key_from))
                 return ''
     return func_wrapper
 
@@ -187,7 +187,7 @@ class Status:
                                 "key VARCHAR(20) NOT NULL PRIMARY KEY,"
                                 "value VARCHAR(30) NOT NULL )".format(self.API))
         except Exception as e:
-            print e
+            print(e)
 
     @db_ok
     def set_API_key(self, key, value):
@@ -203,7 +203,7 @@ class Status:
         try:
             self.cursor.execute("delete from `{}` WHERE key = '{}'".format(self.API, key))
         except Exception as e:
-            print e
+            print(e)
 
     @db_ok
     def get_API_key(self, key=''):
@@ -272,7 +272,7 @@ class Status:
 
 if __name__ == '__main__':
     youdao = Youdao('fox')
-    print youdao.executor()
+    print (youdao.executor())
 
     # print youdao.raw
     # print(youdao.web())
