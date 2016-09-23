@@ -64,6 +64,13 @@ def debug_mode(wanted):
     return youdao.check_raw()
 
 
+@seeker.seek('--clean', short='-c', is_mark=True, extra={'desc': 'clean the db'})
+def web(wanted):
+    import os
+    os.remove(youdao.db_path)
+    return youdao.db_path + '  removed'
+
+
 def runner():
     seeker.run()
 

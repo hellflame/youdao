@@ -35,6 +35,7 @@ def cache(function):
         if data:
             # print "CACHE FOUND"
             self.result = json.loads(data)
+            self.valid_check()
             return self.result
         else:
             # print "CACHING ..."
@@ -85,7 +86,7 @@ class Youdao:
         """
         try:
             data_url = self.data_url.format(self.key_from, self.key, quote(self.phrase))
-            self.raw = urlopen(data_url, timeout=3).read().decode('utf8')
+            self.raw = urlopen(data_url, timeout=3).read().decode('utf8').encode('utf8')
             self.result = json.loads(self.raw)
             self.valid_check()
             return self.result
