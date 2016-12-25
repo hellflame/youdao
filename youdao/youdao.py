@@ -57,7 +57,7 @@ class Youdao:
         self.valid = True
         self.raw = ''
         if not db_path:
-            self.db_path = os.path.expanduser('~') + '/.youdao.sqlite3.db'
+            self.db_path = os.path.join(os.path.expanduser('~'), '.youdao.sqlite3.db')
         else:
             self.db_path = db_path
         self.status = Status(self.db_path)
@@ -97,8 +97,22 @@ class Youdao:
             print("Meow~~~Server responded hair bulb!")
             exit(2)
         except Exception as e:
-            print(type(e))
+            print self.phrase.encode()
+            print(e)
+            print "up is error"
             exit(3)
+
+    def update(self):
+        data = self.status.query_list()
+        for i in data:
+            self.phrase = i[0].encode()
+            print "updating @ {}\t".format(self.phrase),
+            fetch = self.executor_without_cache()
+            if fetch['errorCode'] == 0:
+                self.status.up_set(self.phrase, json.dumps(fetch))
+                print "ok"
+            else:
+                print "failed"
 
     def check_raw(self):
         return json.dumps(self.result, indent=2)
@@ -219,6 +233,18 @@ class Status:
             return random.choice(default_keys)
         else:
             return random.choice(result)
+
+    @db_ok
+    def API_list(self):
+        self.cursor.execute("select key, value from {}".format(self.API))
+        result = self.cursor.fetchall()
+        return result
+
+    @db_ok
+    def query_list(self):
+        self.cursor.execute("select query from {}".format(self.QUERY))
+        result = self.cursor.fetchall()
+        return result
 
     @db_ok
     def query(self, query):
