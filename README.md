@@ -1,19 +1,19 @@
 # youdao
 
-通过[有道API](http://fanyi.youdao.com/openapi)进行终端单词，翻译查询
+通过[有道翻译API](http://fanyi.youdao.com/openapi)进行终端单词，翻译查询
 
-### Install
+### 安装
 
 ```bash
  $ sudo pip install youdaodict --upgrade
 
 ```
 
-### Usage
+### 使用
 
 终端调用：
 
-#### 帮助
+#### 帮助菜单
 
 ```bash
 	$ youdao
@@ -42,7 +42,7 @@ Usage:
 程序一开始应该便可用，输入youdao + 想要查询的内容即可
 
 更多帮助信息
-https://github.com/hellflame/youdao/blob/v3.2.0/README.md
+https://github.com/hellflame/youdao/blob/v3.2.1/README.md
 ```
 
 
@@ -139,8 +139,8 @@ https://github.com/hellflame/youdao/blob/v3.2.0/README.md
 
 当找不到查询的单词或句子时，将会提示没有这个单词或句子的结果
 
-```
-youdao hellflame
+```bash
+	$ youdao hellflame
 
  (╯▔皿▔ )╯ hellflame ㄟ(▔皿▔ ㄟ)
 ```
@@ -262,6 +262,7 @@ instant = Youdao()
 + 3.1.0 ==> 使用SQLite3数据库进行本地存储，可离线查询
 + 3.1.2 ==> Bug修复，数据库清除可选
 + 3.2.0 ==> 手动处理参数获取
++ 3.2.1 ==> 精细错误码识别
 
 项目主要目的在于简单方便的终端查询，虽然功能在越来越多，但是一般能够用到的还是只有查询这一个功能。主要也在于linux系统中没有找到方便的单词查询工具，而且本身只要调用接口的话，就什么都出来了，这使得整个项目变的很简单。项目的所有功能依据也都是来自于个人的需求
 

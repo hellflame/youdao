@@ -19,18 +19,18 @@ default_keys = (('1971137497', 'privateDict'),
                 ('623990957', 'hellflamedns'))
 
 
-def db_ok(function):
+def db_ok(func):
     def func_wrapper(self, *args, **kwargs):
         if self.db and self.cursor:
-            return function(self, *args, **kwargs)
+            return func(self, *args, **kwargs)
     return func_wrapper
 
 
-def cache(function):
+def cache(func):
     def func_wrapper(self):
         if len(self.phrase) > self.status.MAX_QUERY_LENGTH:
             # print "TOO LONG"
-            return function(self)
+            return func(self)
         data = self.status.query(self.phrase)
         if data:
             # print "CACHE FOUND"
@@ -39,12 +39,18 @@ def cache(function):
             return self.result
         else:
             # print "CACHING ..."
-            data = function(self)
-            if data['errorCode'] == 0:
+            data = func(self)
+            error_code = data['errorCode']
+            if error_code == 0:
                 self.status.up_set(self.phrase, json.dumps(data))
                 return data
             else:
-                print ("Invalid key pair found !!!\n\nkey: {}\nfrom: {}\n".format(self.key, self.key_from))
+                if error_code == 30:
+                    print("Translate UnSuccessful!")
+                elif error_code == 40:
+                    print("Unsupported Language Type !")
+                elif error_code == 50:
+                    print ("Invalid key pair found !!!\n\nkey: {}\nfrom: {}\n".format(self.key, self.key_from))
                 return ''
     return func_wrapper
 
