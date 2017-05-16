@@ -7,7 +7,7 @@ from youdao import Youdao
 
 youdao = Youdao()
 
-__version__ = '3.2.1'
+__version__ = '3.2.2'
 
 map_target = {
     '--trans': '直接翻译',

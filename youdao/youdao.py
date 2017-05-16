@@ -58,7 +58,7 @@ def cache(func):
 class Youdao:
     def __init__(self, phrase='', db_path=''):
         self.data_url = "http://fanyi.youdao.com/openapi.do?keyfrom={}&key={}&type=data&doctype=json&version=1.1&q={}"
-        self.phrase = phrase
+        self.phrase = phrase.lower()
         self.result = {}
         self.valid = True
         self.raw = ''
@@ -72,7 +72,7 @@ class Youdao:
         self.key_from = key[1]
 
     def set_phrase(self, phrase):
-        self.phrase = phrase
+        self.phrase = phrase.lower()
 
     def valid_check(self):
         if 'translation' not in self.result or \
