@@ -298,11 +298,6 @@ class Status:
                                     fetch[2]
                                 ))
 
-    def __del__(self):
-        if self.db:
-            self.db.commit()
-            self.db.close()
-
 if __name__ == '__main__':
     youdao = Youdao('fox')
     print (youdao.executor())
