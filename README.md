@@ -5,8 +5,7 @@
 ### 安装
 
 ```bash
- $ sudo pip install youdaodict --upgrade
-
+$ sudo pip install youdaodict --upgrade
 ```
 
 ### 使用
@@ -16,8 +15,8 @@
 #### 帮助菜单
 
 ```bash
-	$ youdao
-	$ youdao -h
+$ youdao
+$ youdao -h
 ```
 
 ```
@@ -50,7 +49,7 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 #### 基本查询
 
 ```bash
-	$ youdao whatever
+$ youdao whatever
 ```
 
 终端输入`youdao` + 想要查询的`单词`或`句子`即可进行查询，如果该单词存在词库，则默认输出基本解释，API接口可以进行英汉双向翻译或解释
@@ -68,8 +67,8 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 #### 网络释义
 
 ```bash
-	$ youdao whatever -w
-	$ youdao -w whatever
+$ youdao whatever -w
+$ youdao -w whatever
 ```
 
 ```
@@ -89,8 +88,8 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 1.
 
 ```bash
-	$ youdao whatever -t
-	$ youdao -t whatever
+$ youdao whatever -t
+$ youdao -t whatever
 ```
 
 在目标单词或前或后添加`-t`参数，即可获取该单词的对应翻译
@@ -98,7 +97,7 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 2.
 
 ```bash
-	$ youdao linux is fine
+$ youdao linux is fine
 ```
 
 ```
@@ -111,8 +110,8 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 #### 所有查询结果
 
 ```bash
-	$ youdao whatever -a
-	$ youdao -a whatever
+$ youdao whatever -a
+$ youdao -a whatever
 ```
 
 ```
@@ -141,7 +140,7 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 当找不到查询的单词或句子时，将会提示没有这个单词或句子的结果
 
 ```bash
-	$ youdao hellflame
+$ youdao hellflame
 
  (╯▔皿▔ )╯ hellflame ㄟ(▔皿▔ ㄟ)
 ```
@@ -149,8 +148,8 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 #### 添加API key
 
 ```bash
-	$ youdao -k (查看用户自己添加的key)
-	$ youdao -k <key> <keyfrom>
+$ youdao -k (查看用户自己添加的key)
+$ youdao -k <key> <keyfrom>
 ```
 
 一般情况下，并不需要手动添加自己的key还有keyfrom，如果添加，程序将只会使用用户提供的API key，如果提示这是无效key的话，删除这对key或者索性删除数据库文件也可以
@@ -158,7 +157,7 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 #### 删除API key
 
 ```bash
-	$ youdao -r <key>
+$ youdao -r <key>
 ```
 
 当在需要时，删除用户手动添加的API key
@@ -166,7 +165,7 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 #### 清除用户数据库
 
 ```bash
-	$ youdao -c
+$ youdao -c
 ```
 
 用户数据库所在位置`~/.youdao.sqlite3.db`，sqlite3
@@ -178,7 +177,7 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 #### 更新数据库
 
 ```bash
-	$ youdao -u
+$ youdao -u
 ```
 
 由于缓存在本地的查询结果在不删除的情况下，就不会请求API，然而查询结果有时会稍微有一点变动，执行更新操作之后，会将本地数据库中的所有查询重新查询一次并缓存，通常不需要更新也可以满足正常使用
@@ -186,8 +185,8 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 #### 调试状态
 
 ```bash
-	$ youdao whatever -d
-	$ youdao -d whatever
+$ youdao whatever -d
+$ youdao -d whatever
 ```
 
 ```
@@ -239,8 +238,8 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 #### 版本信息
 
 ```bash
-	$ youdao -v
-	$ youdao --version
+$ youdao -v
+$ youdao --version
 ```
 
 作为Py Library调用
