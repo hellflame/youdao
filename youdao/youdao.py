@@ -165,6 +165,27 @@ class Youdao:
                 temp += '\t' + i + "\n"
         return temp
 
+    def shred_auto_complete(self, shred):
+        shreds = self.status.shred_query(shred)
+        temp = " ".join((x[0] for x in shreds if len(shreds) > 1 and not x[0] == shred or x[0].startswith(shred)))
+        return temp
+
+    @staticmethod
+    def complete_code():
+        return """###-begin-youdao-completion-###
+# simple youdaoDict word auto completion script
+# Installation: youdao -cp >> ~/.bashrc  (or ~/.zshrc)
+# or youdao -cp >> ~/.bash_profile (.etc)
+#
+_youdao_parser_options()
+{
+  local curr_arg;
+  curr_arg=${COMP_WORDS[COMP_CWORD]}
+  COMPREPLY=( $(compgen -W "$(youdao --shard $curr_arg)" $curr_arg ) );
+}
+complete -F _youdao_parser_options youdao
+###-end-youdao-completion-###"""
+
 
 class Status:
     def __init__(self, db_path):
@@ -184,6 +205,11 @@ class Status:
         self.API = 'API_keys'
         self.MAX_QUERY_LENGTH = 50
         self.init_db()
+
+    def __del__(self):
+        if self.db:
+            self.db.commit()
+            self.db.close()
 
     def init_db(self):
         try:
@@ -262,6 +288,17 @@ class Status:
             return unquote(result[0])
         return None
 
+    def shred_query(self, shred):
+        if shred:
+            self.cursor.execute("""select query from {} WHERE query like "{}%" limit 10""".format(
+                self.QUERY, shred
+            ))
+        else:
+            self.cursor.execute("select query from {} limit 10".format(self.QUERY))
+
+        result = self.cursor.fetchall()
+        return result
+
     @db_ok
     def up_set(self, query, raw_json):
         # TODO: `update` or `insert` without status check for laziness
@@ -300,12 +337,6 @@ class Status:
 
 if __name__ == '__main__':
     youdao = Youdao('fox')
-    print (youdao.executor())
-
-    # print youdao.raw
-    # print(youdao.web())
-    # print(youdao.trans())
-    # print(youdao.basic())
-
+    print (youdao.shred_auto_complete('f'))
 
 

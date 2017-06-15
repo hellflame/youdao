@@ -35,6 +35,7 @@ Usage:
   --update,-u	更新数据库
   --debug,-d	调试模式
   --trans,-t	直接翻译
+  --comp,-cp	自动补全
   --all,-a	翻译+基本释义
   --help,-h	显示帮助信息
   --clean,-c	清除数据库
@@ -42,7 +43,7 @@ Usage:
 程序一开始应该便可用，输入youdao + 想要查询的内容即可
 
 更多帮助信息
-https://github.com/hellflame/youdao/blob/v3.2.1/README.md
+https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 ```
 
 
@@ -250,6 +251,28 @@ instant = Youdao()
 
 ```
 
+### bash自动补全
+
+> 添加于v3.3.0版本
+
+自动补全代码:
+
+```bash
+$ youdao -cp
+```
+
+可以将输出的bash脚本输出到用户目录的 *.bash_profile* 、*.bash_profile*等目录，若要立即生效，执行如下命令:
+
+```bash 
+$ source ~/.bash_profile
+
+# or in Linux 
+$ source ~/.bashrc
+```
+
+> 由于对bash补全不是很熟悉，不排除会出现补全过程出现问题=。=
+
+
 ### 开发历程
 
 + 1.1.4 ==> 添加新选项, -a --all 输出所有可选输出
@@ -264,6 +287,7 @@ instant = Youdao()
 + 3.2.0 ==> 手动处理参数获取
 + 3.2.1 ==> 精细错误码识别
 + 3.2.2 ==> 单词默认小写
++ 3.3.0 ==> bash自动补全
 
 项目主要目的在于简单方便的终端查询，虽然功能在越来越多，但是一般能够用到的还是只有查询这一个功能。主要也在于linux系统中没有找到方便的单词查询工具，而且本身只要调用接口的话，就什么都出来了，这使得整个项目变的很简单。项目的所有功能依据也都是来自于个人的需求
 

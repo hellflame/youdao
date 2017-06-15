@@ -7,7 +7,7 @@ from youdao import Youdao
 
 youdao = Youdao()
 
-__version__ = '3.2.2'
+__version__ = '3.3.0'
 
 map_target = {
     '--trans': '直接翻译',
@@ -20,7 +20,8 @@ map_target = {
     '--clean': "清除数据库",
     "--update": "更新数据库",
     "--version": "版本信息",
-    '--debug': "调试模式"
+    '--debug': "调试模式",
+    '--comp': "自动补全"
 }
 
 short = {
@@ -34,7 +35,8 @@ short = {
     '--clean': '-c',
     '--update': '-u',
     '--version': '-v',
-    '--debug': '-d'
+    '--debug': '-d',
+    '--comp': '-cp'
 }
 
 
@@ -65,6 +67,8 @@ def main():
                 print youdao.db_path + '  removed'
             elif arg in ('-h', '--help'):
                 help_menu()
+            elif arg in ('-cp', '--comp'):
+                print youdao.complete_code()
             elif arg in ('-k', '--a-key'):
                 result = youdao.status.API_list()
                 if not len(result):
@@ -75,17 +79,21 @@ def main():
 
             elif arg in ('-u', '--update'):
                 youdao.update()
-
+            elif arg == '--shard':
+                print youdao.shred_auto_complete('')
             else:
-                youdao.set_phrase(arg)
-                youdao.executor()
-                result = youdao.basic()
-                if result:
-                    print result
-                elif not result and youdao.valid:
-                    print youdao.trans()
+                if not arg.startswith("-"):
+                    youdao.set_phrase(arg)
+                    youdao.executor()
+                    result = youdao.basic()
+                    if result:
+                        print result
+                    elif not result and youdao.valid:
+                        print youdao.trans()
+                    else:
+                        print " (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(arg)
                 else:
-                    print " (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(arg)
+                    help_menu()
         elif arg_len == 3:
             arg = argv[1:]
             if arg[0] in ('-r', '--r-key'):
@@ -94,43 +102,50 @@ def main():
                 print "key pair removed"
 
             elif arg[0].startswith('-'):
-                youdao.set_phrase(arg[1])
-                youdao.executor()
+                if not arg[0] == '--shard' and not arg[1].startswith("-"):
+                    youdao.set_phrase(arg[1])
+                    youdao.executor()
 
-                if arg[0] in ('-d', '--debug'):
-                    print youdao.check_raw()
-                elif arg[0] in ('-w', '--web'):
-                    print youdao.web()
-                elif arg[0] in ('-t', '--trans'):
-                    print youdao.trans()
-                elif arg[0] in ('-b', '--basic'):
-                    print youdao.basic()
-                elif arg[0] in ('-a', '--all'):
-                    print youdao.basic()
-                    print youdao.web()
-                    print youdao.trans()
-                else:
-                    help_menu()
+                    if arg[0] in ('-d', '--debug'):
+                        print youdao.check_raw()
+                    elif arg[0] in ('-w', '--web'):
+                        print youdao.web()
+                    elif arg[0] in ('-t', '--trans'):
+                        print youdao.trans()
+                    elif arg[0] in ('-b', '--basic'):
+                        print youdao.basic()
+                    elif arg[0] in ('-a', '--all'):
+                        print youdao.basic()
+                        print youdao.web()
+                        print youdao.trans()
+                    else:
+                        help_menu()
+                elif arg[0] == '--shard':
+                    print youdao.shred_auto_complete(arg[1])
 
             elif arg[1].startswith('-'):
-                youdao.set_phrase(arg[0])
-                youdao.executor()
-                if arg[1] in ('-d', '--debug'):
-                    print youdao.check_raw()
-                elif arg[1] in ('-w', '--web'):
-                    print youdao.web()
-                elif arg[1] in ('-t', '--trans'):
-                    print youdao.trans()
-                elif arg[1] in ('-b', '--basic'):
-                    print youdao.basic()
-                elif arg[1] in ('-a', '--all'):
-                    print youdao.basic()
-                    print youdao.web()
-                    print youdao.trans()
+                if not arg[0].startswith('-'):
+                    youdao.set_phrase(arg[0])
+                    youdao.executor()
+                    if arg[1] in ('-d', '--debug'):
+                        print youdao.check_raw()
+                    elif arg[1] in ('-w', '--web'):
+                        print youdao.web()
+                    elif arg[1] in ('-t', '--trans'):
+                        print youdao.trans()
+                    elif arg[1] in ('-b', '--basic'):
+                        print youdao.basic()
+                    elif arg[1] in ('-a', '--all'):
+                        print youdao.basic()
+                        print youdao.web()
+                        print youdao.trans()
+                    else:
+                        help_menu()
                 else:
                     help_menu()
             else:
-                youdao.set_phrase(" ".join(arg))
+                temp = " ".join(arg)
+                youdao.set_phrase(temp.strip('-'))
                 youdao.executor()
                 result = youdao.basic()
                 if result:
@@ -146,7 +161,8 @@ def main():
                 youdao.status.set_API_key(arg[1], arg[2])
                 print "key pair added, if error happens, use -r to remove them"
             else:
-                youdao.set_phrase(" ".join(arg))
+                temp = " ".join(arg)
+                youdao.set_phrase(temp.strip('-'))
                 youdao.executor()
                 result = youdao.basic()
                 if result:

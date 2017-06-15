@@ -5,8 +5,8 @@ __author__ = 'hellflame'
 
 setup(
     name='YoudaoDict',
-    version="3.2.2",
-    keywords=('Youdao', 'youdao', 'dict', 'youdao api', 'partly offset dict'),
+    version="3.3.0",
+    keywords=('Youdao', 'youdao', 'dict', 'youdao api', 'partly offline dict'),
     description="终端通过有道api查询单词或者翻译词句",
     license='MIT',
     author='hellflame',
