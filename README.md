@@ -271,6 +271,7 @@ $ source ~/.bashrc
 
 > 由于对bash补全不是很熟悉，不排除会出现补全过程出现问题=。=
 
+![](https://static.hellflame.net/resource/c26b182ef30500ffa3bc7373d5207036)
 
 ### 开发历程
 
