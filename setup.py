@@ -13,6 +13,10 @@ setup(
     author_email='hellflamedly@gmail.com',
     url="https://github.com/hellflame/youdao",
     packages=find_packages(),
+    install_requires=[
+        'beautifulsoup4',
+        'requests'
+    ],
     platforms="UNIX like",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
