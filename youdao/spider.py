@@ -120,5 +120,5 @@ class Spider:
                 return None, None
 
 if __name__ == '__main__':
-    print Spider(lang='fr').deploy('中文')
+    print Spider().deploy('chinese')
 

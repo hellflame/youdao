@@ -1,105 +1,111 @@
-import time
-import json
-
 try:
-    import redis
-    import tornado.web
-    import tornado.ioloop
-    import pymongo
+    from twisted.internet import defer, reactor, protocol, endpoints
+    from twisted.protocols.basic import LineReceiver
+    from txmongo.connection import ConnectionPool
 except ImportError:
     print("""This Service Require Following Dependencies:
-    redis
-    tornado
-    pymongo
+    twisted
+    txmongo
 
 and Databases:
-    redis
     mongodb
     """)
     exit(1)
 
+import json
+import time
 
-class MongoStore:
-    def __init__(self, username=None, password=None, mechanism='SCRAM-SHA-1'):
-        client = pymongo.MongoClient()
-        if username and password:
-            self.db = client.Youdao.authenticate(username, password, mechanism=mechanism)
+from youdao.spider import Spider
+
+
+class YoudaoProtocol(LineReceiver):
+    def __init__(self, factory):
+        self.factory = factory
+
+    def connectionMade(self):
+        self.factory.connections += 1
+        if self.factory.connections > self.factory.MAX_CONNECTIONS:
+            self.transport.loseConnection()
+
+    def connectionLost(self, reason=None):
+        self.factory.connections -= 1
+
+    def lineReceived(self, line):
+        result = self.factory.get(line)
+
+        def spider_consume(result):
+            if result is not None:
+                del result['_id']
+                self.transport.write(json.dumps(result) + b'\r\n')
+
+        def spider_error(err):
+            self.transport.loseConnection()
+
+        def done(result):
+            if result:
+                # print "Mongodb"
+                del result['_id']
+                del result['key']
+                self.transport.write(json.dumps(result) + b'\r\n')
+
+            else:
+                # print "Spider Fetch"
+                result = self.factory.spider_fetch(line)
+                result.addCallback(spider_consume)
+                result.addErrback(spider_error)
+
+        def onError(err):
+            self.transport.write('')
+            self.transport.loseConnection()
+
+        result.addErrback(onError)
+        result.addCallback(done)
+
+
+class YoudaoFactory(protocol.ServerFactory):
+    def __init__(self, uri=None):
+        if uri:
+            mongodb = ConnectionPool(uri=uri)
         else:
-            self.db = client.Youdao
+            mongodb = ConnectionPool()
+        self.db = mongodb.Youdao.Words
+        self.connections = 0
+        self.MAX_CONNECTIONS = 1024
 
-    def insert(self, key, pronounces, translate, web_translate):
-        if self.db.find_one({'key': key}):
-            self.db.insert({
-                'key': key,
-                'pronounces': pronounces,
-                'translate': translate,
-                'web_translate': web_translate,
-                'insert_time': int(time.time())
-            })
-        else:
-            self.db.update({
-                'key': key
-            }, {
-                '$set': {
-                    'pronounces': pronounces,
-                    'translate': translate,
-                    'web_translate': web_translate,
-                    'update_time': int(time.time())
-                }
-            })
+    def buildProtocol(self, addr):
+        return YoudaoProtocol(self)
 
-    def fetch(self, key):
-        self.db.update({
-            'key': key
+    @defer.inlineCallbacks
+    def get(self, target):
+        result = yield self.db.find_one({
+            'key': target
+        })
+        yield self.db.update({
+            'key': target
         }, {
             '$inc': {
                 'used': 1
             }
         })
-        return self.db.find_one({
-            'key': key
-        })
+        defer.returnValue(result)
+
+    @defer.inlineCallbacks
+    def spider_fetch(self, target):
+        status, result = yield Spider().deploy(target)
+        if result is not None:
+            if not status:
+                temp = result
+                temp['key'] = target
+                temp['insert_time'] = int(time.time())
+                yield self.db.insert(temp)
+        defer.returnValue(result)
 
 
-class RedisStore:
-    def __init__(self, *args, **kwargs):
-        self.db = redis.StrictRedis(args, kwargs)
-
-    def fetch(self, key):
-        real_key = "youdao-{}".format(key)
-        if self.db.exists(real_key):
-            return json.loads(self.db.get(real_key))
-        return None
-
-    def cache(self, key, data):
-        real_key = "youdao-{}".format(key)
-        self.db.set(real_key, json.dumps(data))
-
-
-class MainHandler(tornado.web.RequestHandler):
-    def get(self, *args, **kwargs):
-        return self.send_error(404)
-
-    def post(self):
-        return self.write("hell")
-
-
-routes = [(r'/', MainHandler)]
+def main(port=5001):
+    EndPoint = endpoints.serverFromString(reactor, 'tcp:{}'.format(port))
+    EndPoint.listen(YoudaoFactory())
+    reactor.run()
 
 if __name__ == '__main__':
-    DEBUG = True
-    if DEBUG:
-        settings = {
-            'debug': True,
-            'autoreload': True,
-            'serve_traceback': True
-        }
-    else:
-        settings = {
-            'debug': False,
-            'autoreload': True,
-            'serve_traceback': False
-        }
-    app = tornado.web.Application(handlers=routes, **settings)
-    app.listen(5000, address='127.0.0.1')
-    tornado.ioloop.IOLoop.current().start()
+    main()
+
