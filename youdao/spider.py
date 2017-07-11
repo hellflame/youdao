@@ -5,9 +5,10 @@ import urllib
 import requests
 
 from contextlib import contextmanager
+__author__ = "hellflame"
 
 
-class Spider:
+class Spider(object):
     def __init__(self, lang='eng', timeout=3):
         self.__html_url = "http://dict.youdao.com/w/{}/".format(lang)
         self.__timeout = timeout

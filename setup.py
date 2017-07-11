@@ -5,7 +5,7 @@ __author__ = 'hellflame'
 
 setup(
     name='YoudaoDict',
-    version="3.3.0",
+    version="4.0.0",
     keywords=('Youdao', 'youdao', 'dict', 'youdao api', 'partly offline dict'),
     description="终端通过有道api查询单词或者翻译词句",
     license='MIT',
@@ -15,7 +15,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         'beautifulsoup4',
-        'requests'
+        'requests',
+        'gevent'
     ],
     platforms="UNIX like",
     classifiers=[
