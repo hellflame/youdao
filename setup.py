@@ -7,7 +7,7 @@ setup(
     name='YoudaoDict',
     version="4.0.0",
     keywords=('Youdao', 'youdao', 'dict', 'youdao api', 'partly offline dict'),
-    description="终端通过有道api查询单词或者翻译词句",
+    description="通过有道爬虫查询单词",
     license='MIT',
     author='hellflame',
     author_email='hellflamedly@gmail.com',
@@ -30,7 +30,8 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'youdao=youdao.run:main'
+            'youdao=youdao.run:main',
+            'service.youdao=youdao.service.run:main'
         ]
     }
 )

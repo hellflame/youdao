@@ -43,7 +43,7 @@ class Race(object):
 
     def racer_weapon(self, bullet, gun):
         self.result = bullet
-        print gun
+        # print gun
         if not gun == 'sql' and 'possibles' not in bullet:
             self.sql_saver.upset(self.phrase, bullet)
         self.pool.kill()
@@ -53,7 +53,7 @@ class Race(object):
 
 
 if __name__ == '__main__':
-    race = Race('weldline')
+    race = Race('world')
     race.launch_race()
     print race.result
 

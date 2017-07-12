@@ -1,5 +1,6 @@
 # coding=utf8
 
+import sys
 import bs4
 import urllib
 import requests
@@ -19,14 +20,18 @@ class Spider(object):
         try:
             req = requests.get(url, timeout=self.__timeout)
         except requests.Timeout:
-            raise Exception('链接 `{}` 请求超时'.format(url))
+            sys.stderr.write('链接 `{}` 请求超时'.format(url))
+            exit(1)
         except requests.ConnectionError:
-            raise Exception('链接 `{}` 连接失败'.format(url))
+            sys.stderr.write('链接 `{}` 连接失败'.format(url))
+            exit(1)
         except Exception:
-            raise Exception('链接 `{}` 连接时发生未知错误')
+            sys.stderr.write('链接 `{}` 连接时发生未知错误')
+            exit(1)
 
         if not req.status_code == 200:
-            raise Exception('链接 `{}` 非法状态码: {}'.format(url, req.status_code))
+            sys.stderr.write('链接 `{}` 非法状态码: {}'.format(url, req.status_code))
+            exit(1)
 
         yield bs4.BeautifulSoup(req.content, 'html.parser')
 

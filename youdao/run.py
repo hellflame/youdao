@@ -4,11 +4,16 @@
 import os
 import sys
 from youdao import Youdao
+from sqlsaver import SQLSaver
 
+db_path = SQLSaver().db_path
 youdao = Youdao()
 
 __version__ = '4.0.0'
 __author__ = "hellflame"
+
+reload(sys)
+sys.setdefaultencoding("utf8")
 
 map_target = {
     '--trans': '直接翻译',
@@ -58,8 +63,8 @@ def main():
             if arg in ('-v', '--version'):
                 print 'YoudaoDict Version {}'.format(__version__)
             elif arg in ('-c', '--clean'):
-                os.remove(youdao.db_path)
-                print youdao.db_path + '  removed'
+                os.remove(db_path)
+                print db_path + '  removed'
             elif arg in ('-h', '--help'):
                 help_menu()
             elif arg in ('-cp', '--comp'):
@@ -130,7 +135,7 @@ def main():
                 result = youdao.basic()
                 if result:
                     print result
-                elif not result and youdao.valid:
+                elif not result and not youdao.is_new and youdao.valid:
                     print youdao.trans()
                 else:
                     print " (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(youdao.phrase)
@@ -143,7 +148,7 @@ def main():
             result = youdao.basic()
             if result:
                 print result
-            elif not result and youdao.valid:
+            elif youdao.result and not youdao.is_new and not result and youdao.valid:
                 print youdao.trans()
             else:
                 print " (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(youdao.phrase)

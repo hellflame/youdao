@@ -1,6 +1,7 @@
 # coding=utf8
 """
     fetch result from the backup server, default backup server hellflame.net:3679
+    btw: customized server is not a must, but it will speed up a little the query progress
 """
 
 import socket

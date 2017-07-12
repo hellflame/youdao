@@ -1,6 +1,6 @@
 # youdao
 
-通过[有道翻译API](http://fanyi.youdao.com/openapi)进行终端单词，翻译查询
+> 曾经通过[有道翻译API](http://fanyi.youdao.com/openapi)进行终端单词，翻译查询，由于这个接口将于2017年年底关闭，故采用网页爬虫的形式进行
 
 ### 安装
 
@@ -26,23 +26,20 @@ Usage:
   youdao <word | phrase | sentence> [args...]	参数后置，查询翻译或解释
   youdao [args...] <word | phrase | sentence>	参数前置，查询翻译或解释
 
-  --a-key,-k	添加API key
-  --version,-v	版本信息
-  --web,-w	网络翻译
-  --r-key,-r	删除API key
   --basic,-b	基本释义
-  --update,-u	更新数据库
   --debug,-d	调试模式
   --trans,-t	直接翻译
   --comp,-cp	自动补全
   --all,-a	翻译+基本释义
-  --help,-h	显示帮助信息
+  --version,-v	版本信息
+  --web,-w	网络翻译
   --clean,-c	清除数据库
+  --help,-h	显示帮助信息
 
-程序一开始应该便可用，输入youdao + 想要查询的内容即可
+输入youdao + 想要查询的内容即可
 
 更多帮助信息
-https://github.com/hellflame/youdao/blob/v3.3.0/README.md
+https://github.com/hellflame/youdao/blob/v4.0.0/README.md
 ```
 
 
@@ -52,7 +49,7 @@ https://github.com/hellflame/youdao/blob/v3.3.0/README.md
 $ youdao whatever
 ```
 
-终端输入`youdao` + 想要查询的`单词`或`句子`即可进行查询，如果该单词存在词库，则默认输出基本解释，API接口可以进行英汉双向翻译或解释
+终端输入`youdao` + 想要查询的`单词`或`句子`即可进行三重查询，`本地查询`/`个人服务器查询`/`有道网页查询`，从三种查询中获取最快的响应。
 
 ```
 基本释义 >>>
@@ -107,6 +104,8 @@ $ youdao linux is fine
 
 如果直接跟句子的话，一般也只会得到翻译结果
 
+> 由于有道翻译的结果基本不能接受，所以还是考虑更靠谱的Google翻译好了，在v4.0.0之后，爬虫抓取结果不会再涉及翻译结果，最多采用有道的相似结果
+
 #### 所有查询结果
 
 ```bash
@@ -145,22 +144,17 @@ $ youdao hellflame
  (╯▔皿▔ )╯ hellflame ㄟ(▔皿▔ ㄟ)
 ```
 
-#### 添加API key
+> v4.0.0之后可能会有相似结果出现
 
-```bash
-$ youdao -k (查看用户自己添加的key)
-$ youdao -k <key> <keyfrom>
 ```
+相关词语     >>>
+	hotflame
+	hotflame
 
-一般情况下，并不需要手动添加自己的key还有keyfrom，如果添加，程序将只会使用用户提供的API key，如果提示这是无效key的话，删除这对key或者索性删除数据库文件也可以
+	hellfire
+	n.地狱之火；严酷的苦难
 
-#### 删除API key
-
-```bash
-$ youdao -r <key>
 ```
-
-当在需要时，删除用户手动添加的API key
 
 #### 清除用户数据库
 
@@ -173,14 +167,6 @@ $ youdao -c
 删除用户数据库并不会影响在线状态下的继续使用
 
 用户数据库中主要存储着用户给定的API key信息以及缓存的查询结果，缓存查询结果，可以加速下一次相同的查询，也可以在离线情况下使用
-
-#### 更新数据库
-
-```bash
-$ youdao -u
-```
-
-由于缓存在本地的查询结果在不删除的情况下，就不会请求API，然而查询结果有时会稍微有一点变动，执行更新操作之后，会将本地数据库中的所有查询重新查询一次并缓存，通常不需要更新也可以满足正常使用
 
 #### 调试状态
 
@@ -235,6 +221,38 @@ $ youdao -d whatever
 
 如果出现怀疑查询结果与实际看到的输出不一致的情况的话，使用调试选项，输出从API获取的返回json输出，json未经过更易读的编码调整，如果真的需要的话，需要其他工具进行进一步转换
 
+#### 个人服务器
+
+> 非必需
+
+```bash
+$ service.youdao
+```
+
+该命令默认会在本地3697端口开启TCP服务
+
+> 测试
+
+```bash
+$ telnet localhost 3697
+Trying ::1...
+telnet: connect to address ::1: Connection refused
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+linux
+{"insert_time": 1499742022, "pronounces": ["\u82f1[\u02c8la\u026an\u028cks;\u02c8l\u026an\u028cks]", "\u7f8e[\u02c8l\u026an\u0259ks]"], "used": 6, "web_translate": ["\u64cd\u4f5c\u7cfb\u7edf", "\u6b63\u7248", "\u5e38\u7528\u547d\u4ee4", "\u9884\u88c5"], "translate": ["n. Linux\u64cd\u4f5c\u7cfb\u7edf\uff08\u4e00\u79cd\u7c7b\u4f3c\u4e8eUNIX\u7684\u8ba1\u7b97\u673a\u64cd\u4f5c\u7cfb\u7edf\uff09"]}
+windows
+{"insert_time": 1499742054, "pronounces": ["['w\u026andoz]"], "used": 1, "web_translate": ["\u7a97\u53e3\u64cd\u4f5c\u7cfb\u7edf", "\u8981\u6c42", "\u9700\u6c42", "\u7a97\u53e3"], "translate": ["n. \u5fae\u8f6f\u516c\u53f8\u751f\u4ea7\u7684\u201c\u89c6\u7a97\u201d\u64cd\u4f5c\u7cfb\u7edf"]}
+
+```
+
+服务不会主动断开连接，并且直接响应每一行输入，返回目标json
+
+服务默认最高支持1024个连接
+
+作者可能在自己的服务器上开启这个端口访问，也可能不会！
+
 #### 版本信息
 
 ```bash
@@ -242,13 +260,6 @@ $ youdao -v
 $ youdao --version
 ```
 
-作为Py Library调用
-
-```
-from youdao import Youdao
-instant = Youdao()
-
-```
 
 ### bash自动补全
 
@@ -288,6 +299,7 @@ $ source ~/.bashrc
 + 3.2.1 ==> 精细错误码识别
 + 3.2.2 ==> 单词默认小写
 + 3.3.0 ==> bash自动补全
++ 4.0.0 ==> 取消API调用
 
 项目主要目的在于简单方便的终端查询，虽然功能在越来越多，但是一般能够用到的还是只有查询这一个功能。主要也在于linux系统中没有找到方便的单词查询工具，而且本身只要调用接口的话，就什么都出来了，这使得整个项目变的很简单。项目的所有功能依据也都是来自于个人的需求
 
