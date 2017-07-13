@@ -8,6 +8,14 @@
 $ sudo pip install youdaodict --upgrade
 ```
 
+MacOS 中如果出现权限问题的话
+
+```bash
+$ pip install youdaodict --upgrade --user
+
+# 仅为当前用户安装
+```
+
 ### 使用
 
 终端调用：
@@ -23,18 +31,18 @@ $ youdao -h
 有道翻译终端程序
 
 Usage:
-  youdao <word | phrase | sentence> [args...]	参数后置，查询翻译或解释
-  youdao [args...] <word | phrase | sentence>	参数前置，查询翻译或解释
+  youdao <word | phrase | sentence> [args...] 参数后置，查询翻译或解释
+  youdao [args...] <word | phrase | sentence> 参数前置，查询翻译或解释
 
-  --basic,-b	基本释义
-  --debug,-d	调试模式
-  --trans,-t	直接翻译
-  --comp,-cp	自动补全
-  --all,-a	翻译+基本释义
-  --version,-v	版本信息
-  --web,-w	网络翻译
-  --clean,-c	清除数据库
-  --help,-h	显示帮助信息
+  --basic,-b  基本释义
+  --debug,-d  调试模式
+  --trans,-t  直接翻译
+  --comp,-cp  自动补全
+  --all,-a  翻译+基本释义
+  --version,-v  版本信息
+  --web,-w  网络翻译
+  --clean,-c  清除数据库
+  --help,-h 显示帮助信息
 
 输入youdao + 想要查询的内容即可
 
@@ -53,12 +61,12 @@ $ youdao whatever
 
 ```
 基本释义 >>>
-	[wɒt'evə]
-	us. [wət'ɛvɚ]
-	uk. [wɒt'evə]
-	conj. 无论什么
-	adj. 不管什么样的
-	pron. 无论什么；诸如此类
+  [wɒt'evə]
+  us. [wət'ɛvɚ]
+  uk. [wɒt'evə]
+  conj. 无论什么
+  adj. 不管什么样的
+  pron. 无论什么；诸如此类
 ```
 
 #### 网络释义
@@ -70,12 +78,12 @@ $ youdao -w whatever
 
 ```
 网络释义 >>>
-	Whatever
-	  WHATEVER,  Whatever,  诸如此类,
-	Whatever Works
-	  怎样都行,  总之得就得,  纽约遇到爱,
-	Whatever Things
-	  MTV搞什麽,
+  Whatever
+    WHATEVER,  Whatever,  诸如此类,
+  Whatever Works
+    怎样都行,  总之得就得,  纽约遇到爱,
+  Whatever Things
+    MTV搞什麽,
 ```
 
 在查询单词或前或后添加`-w`参数，即可获得网络释义结果
@@ -99,7 +107,7 @@ $ youdao linux is fine
 
 ```
 翻译     >>>
-	linux是好
+  linux是好
 ```
 
 如果直接跟句子的话，一般也只会得到翻译结果
@@ -115,23 +123,23 @@ $ youdao -a whatever
 
 ```
 基本释义 >>>
-	[wɒt'evə]
-	us. [wət'ɛvɚ]
-	uk. [wɒt'evə]
-	conj. 无论什么
-	adj. 不管什么样的
-	pron. 无论什么；诸如此类
+  [wɒt'evə]
+  us. [wət'ɛvɚ]
+  uk. [wɒt'evə]
+  conj. 无论什么
+  adj. 不管什么样的
+  pron. 无论什么；诸如此类
 
 网络释义 >>>
-	Whatever
-	  WHATEVER,  Whatever,  诸如此类,
-	Whatever Works
-	  怎样都行,  总之得就得,  纽约遇到爱,
-	Whatever Things
-	  MTV搞什麽,
+  Whatever
+    WHATEVER,  Whatever,  诸如此类,
+  Whatever Works
+    怎样都行,  总之得就得,  纽约遇到爱,
+  Whatever Things
+    MTV搞什麽,
 
 翻译     >>>
-	无论
+  无论
 ```
 
 当有对应查询结果时，才会有对应显示，并不是所有查询都会有全部返回结果
@@ -148,11 +156,11 @@ $ youdao hellflame
 
 ```
 相关词语     >>>
-	hotflame
-	hotflame
+  hotflame
+  hotflame
 
-	hellfire
-	n.地狱之火；严酷的苦难
+  hellfire
+  n.地狱之火；严酷的苦难
 
 ```
 
@@ -165,6 +173,8 @@ $ youdao -c
 用户数据库所在位置`~/.youdao.sqlite3.db`，sqlite3
 
 删除用户数据库并不会影响在线状态下的继续使用
+
+> 以下功能在v4.0.0之后不存在
 
 用户数据库中主要存储着用户给定的API key信息以及缓存的查询结果，缓存查询结果，可以加速下一次相同的查询，也可以在离线情况下使用
 
@@ -225,6 +235,10 @@ $ youdao -d whatever
 
 > 非必需
 
+个人服务器的存在只是为了(可能的)进一步加速查询过程，如果没有这个服务器的话，程序依然可以正常运行，只是数据来源就只有本地存储和实时网页爬虫了。
+
+服务器中的查询结果当然也是来自于爬虫，预想中是如果有很多人查询的话，相同的结果就会更快的得到响应，从而加速查询。所以如果某一个单词是第一次被请求的话，服务器就要先使用爬虫，然后再返回结果，如果没有网络原因的话，应该比本地的爬虫要慢一点。
+
 ```bash
 $ service.youdao
 ```
@@ -271,7 +285,7 @@ $ youdao --version
 $ youdao -cp
 ```
 
-可以将输出的bash脚本输出到用户目录的 *.bash_profile* 、*.bash_profile*等目录，若要立即生效，执行如下命令:
+可以将输出的bash脚本输出到用户目录的 *.bash_profile* 、*.bashrc* 等目录，若要立即生效，执行如下命令:
 
 ```bash 
 $ source ~/.bash_profile
@@ -304,3 +318,13 @@ $ source ~/.bashrc
 项目主要目的在于简单方便的终端查询，虽然功能在越来越多，但是一般能够用到的还是只有查询这一个功能。主要也在于linux系统中没有找到方便的单词查询工具，而且本身只要调用接口的话，就什么都出来了，这使得整个项目变的很简单。项目的所有功能依据也都是来自于个人的需求
 
 关于本地存储，使用SQLite3作为本地数据库，本想使用MongoDB或者MySQL的，但是并不是所有人都会安装这些数据库的样子，而且这样也会使得使用配置过程变得很麻烦，因为曾经还想着异步更新来着，后来发现这样的需求并不是很重要的样子，并且现在可以手动更新本地数据库，所以使用SQLite也可以满足实际需要
+
+> v4.0.0
+
+从4.0.0版本开始，不再调用有道提供的API。
+
+虽然官方给了另一个API，但是只有专为移动客户端准备的SDK，然而我也不想深入底层查看验证机制(用python来实现一套SDK)，所以就用最简单的爬虫来完成了.
+
+对于本地翻译工具的话，Mac自带的词典工具其实可以满足部分需求，至于词汇量嘛，，，
+
+在线翻译工具的话, [Google翻译](https://translate.google.com.hk/?hl=zh-CN&tab=wT) 翻译结果还好吧。
