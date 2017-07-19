@@ -16,6 +16,14 @@ $ pip install youdaodict --upgrade --user
 # 仅为当前用户安装
 ```
 
+可执行脚本将被安装在`/Users/<username>/Library/Python/2.7/bin/`，将此路径添加进环境变量`PATH`中即可，或者
+
+```bash
+$ echo export PATH=$PATH:/Users/<username>/Library/Python/2.7/bin/ > ~/.bash_profile
+
+
+```
+
 ### 使用
 
 终端调用：
