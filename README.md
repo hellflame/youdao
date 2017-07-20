@@ -21,7 +21,6 @@ $ pip install youdaodict --upgrade --user
 ```bash
 $ echo export PATH=$PATH:/Users/<username>/Library/Python/2.7/bin/ > ~/.bash_profile
 
-
 ```
 
 ### 使用
@@ -57,7 +56,6 @@ Usage:
 更多帮助信息
 https://github.com/hellflame/youdao/blob/v4.0.0/README.md
 ```
-
 
 #### 基本查询
 
@@ -169,7 +167,6 @@ $ youdao hellflame
 
   hellfire
   n.地狱之火；严酷的苦难
-
 ```
 
 #### 清除用户数据库
@@ -266,7 +263,6 @@ linux
 {"insert_time": 1499742022, "pronounces": ["\u82f1[\u02c8la\u026an\u028cks;\u02c8l\u026an\u028cks]", "\u7f8e[\u02c8l\u026an\u0259ks]"], "used": 6, "web_translate": ["\u64cd\u4f5c\u7cfb\u7edf", "\u6b63\u7248", "\u5e38\u7528\u547d\u4ee4", "\u9884\u88c5"], "translate": ["n. Linux\u64cd\u4f5c\u7cfb\u7edf\uff08\u4e00\u79cd\u7c7b\u4f3c\u4e8eUNIX\u7684\u8ba1\u7b97\u673a\u64cd\u4f5c\u7cfb\u7edf\uff09"]}
 windows
 {"insert_time": 1499742054, "pronounces": ["['w\u026andoz]"], "used": 1, "web_translate": ["\u7a97\u53e3\u64cd\u4f5c\u7cfb\u7edf", "\u8981\u6c42", "\u9700\u6c42", "\u7a97\u53e3"], "translate": ["n. \u5fae\u8f6f\u516c\u53f8\u751f\u4ea7\u7684\u201c\u89c6\u7a97\u201d\u64cd\u4f5c\u7cfb\u7edf"]}
-
 ```
 
 服务不会主动断开连接，并且直接响应每一行输入，返回目标json
@@ -281,7 +277,6 @@ windows
 $ youdao -v
 $ youdao --version
 ```
-
 
 ### bash自动补全
 
@@ -308,20 +303,20 @@ $ source ~/.bashrc
 
 ### 开发历程
 
-+ 1.1.4 ==> 添加新选项, -a --all 输出所有可选输出
-+ 1.1.5 ==> 允许不使用引号查询空格隔开的句子
-+ 1.1.6 ==> 修改json获取异常处理
-+ 1.1.7 ==> 网络连接验证机制导致返回数据被强制重定向问题判断
-+ 2.0.0 ==> 添加本地数据库缓存数据，离线可用
-+ 2.0.1 ==> 放宽InstantDB版本限制
-+ 2.0.2 ==> 修复mac os 中无法正确初始化数据库的错误
-+ 3.1.0 ==> 使用SQLite3数据库进行本地存储，可离线查询
-+ 3.1.2 ==> Bug修复，数据库清除可选
-+ 3.2.0 ==> 手动处理参数获取
-+ 3.2.1 ==> 精细错误码识别
-+ 3.2.2 ==> 单词默认小写
-+ 3.3.0 ==> bash自动补全
-+ 4.0.0 ==> 取消API调用
+- 1.1.4 ==> 添加新选项, -a --all 输出所有可选输出
+- 1.1.5 ==> 允许不使用引号查询空格隔开的句子
+- 1.1.6 ==> 修改json获取异常处理
+- 1.1.7 ==> 网络连接验证机制导致返回数据被强制重定向问题判断
+- 2.0.0 ==> 添加本地数据库缓存数据，离线可用
+- 2.0.1 ==> 放宽InstantDB版本限制
+- 2.0.2 ==> 修复mac os 中无法正确初始化数据库的错误
+- 3.1.0 ==> 使用SQLite3数据库进行本地存储，可离线查询
+- 3.1.2 ==> Bug修复，数据库清除可选
+- 3.2.0 ==> 手动处理参数获取
+- 3.2.1 ==> 精细错误码识别
+- 3.2.2 ==> 单词默认小写
+- 3.3.0 ==> bash自动补全
+- 4.0.0 ==> 取消API调用
 
 项目主要目的在于简单方便的终端查询，虽然功能在越来越多，但是一般能够用到的还是只有查询这一个功能。主要也在于linux系统中没有找到方便的单词查询工具，而且本身只要调用接口的话，就什么都出来了，这使得整个项目变的很简单。项目的所有功能依据也都是来自于个人的需求
 
@@ -336,3 +331,7 @@ $ source ~/.bashrc
 对于本地翻译工具的话，Mac自带的词典工具其实可以满足部分需求，至于词汇量嘛，，，
 
 在线翻译工具的话, [Google翻译](https://translate.google.com.hk/?hl=zh-CN&tab=wT) 翻译结果还好吧。
+
+> PS. 由于对之前版本的兼容性考虑不是很多，之前版本的数据库中的查询结果可能会导致一些问题=。=，可能需要删除一下原始的数据库，执行 `qiniu -c` 删除之前版本的数据库或者手动删除`rm ~/.youdao.sqlite3.db`
+
+以上
