@@ -9,7 +9,7 @@ from sqlsaver import SQLSaver
 db_path = SQLSaver().db_path
 youdao = Youdao()
 
-__version__ = '4.0.0'
+__version__ = '4.0.1'
 __author__ = "hellflame"
 
 reload(sys)
@@ -76,10 +76,14 @@ def main():
                     youdao.set_phrase(arg)
                     youdao.executor()
                     result = youdao.basic()
+                    web_result = youdao.web()
+                    trans = youdao.trans()
                     if result:
                         print result
-                    elif not result and youdao.valid:
-                        print youdao.trans()
+                    elif not result and youdao.valid and web_result:
+                        print web_result
+                    elif not result and youdao.valid and trans:
+                        print trans
                     else:
                         print " (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(arg)
                 else:

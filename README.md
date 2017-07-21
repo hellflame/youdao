@@ -20,7 +20,6 @@ $ pip install youdaodict --upgrade --user
 
 ```bash
 $ echo export PATH=$PATH:/Users/<username>/Library/Python/2.7/bin/ > ~/.bash_profile
-
 ```
 
 ### 使用
@@ -54,7 +53,7 @@ Usage:
 输入youdao + 想要查询的内容即可
 
 更多帮助信息
-https://github.com/hellflame/youdao/blob/v4.0.0/README.md
+https://github.com/hellflame/youdao/blob/v4.0.1/README.md
 ```
 
 #### 基本查询
@@ -179,7 +178,7 @@ $ youdao -c
 
 删除用户数据库并不会影响在线状态下的继续使用
 
-> 以下功能在v4.0.0之后不存在
+> API相关的功能在v4.0.0之后不存在
 
 用户数据库中主要存储着用户给定的API key信息以及缓存的查询结果，缓存查询结果，可以加速下一次相同的查询，也可以在离线情况下使用
 
@@ -190,7 +189,7 @@ $ youdao whatever -d
 $ youdao -d whatever
 ```
 
-```
+```json
 {
   "errorCode": 0,
   "query": "whatever",
@@ -233,6 +232,30 @@ $ youdao -d whatever
   ]
 }
 ```
+
+由于版本兼容问题考虑欠佳，在 `v4.0.0` 以后的版本调试信息会类似如下:
+
+```json
+{
+  "translate": [
+    "adj. \u4e0d\u7ba1\u4ec0\u4e48\u6837\u7684",
+    "pron. \u65e0\u8bba\u4ec0\u4e48\uff1b\u8bf8\u5982\u6b64\u7c7b",
+    "conj. \u65e0\u8bba\u4ec0\u4e48"
+  ],
+  "web_translate": [
+    "\u65e0\u8bba\u4ec0\u4e48",
+    "\u8bf8\u5982\u6b64\u7c7b",
+    "\u65e0\u6240\u8c13",
+    "\u529b\u6240\u80fd\u53ca"
+  ],
+  "pronounces": [
+    "\u82f1[w\u0252t'ev\u0259]",
+    "\u7f8e[w\u0259t'\u025bv\u025a]"
+  ]
+}
+```
+
+
 
 如果出现怀疑查询结果与实际看到的输出不一致的情况的话，使用调试选项，输出从API获取的返回json输出，json未经过更易读的编码调整，如果真的需要的话，需要其他工具进行进一步转换
 
@@ -317,6 +340,7 @@ $ source ~/.bashrc
 - 3.2.2 ==> 单词默认小写
 - 3.3.0 ==> bash自动补全
 - 4.0.0 ==> 取消API调用
+- 4.0.1 ==> 修复在无基本释义情况下的显示策略问题
 
 项目主要目的在于简单方便的终端查询，虽然功能在越来越多，但是一般能够用到的还是只有查询这一个功能。主要也在于linux系统中没有找到方便的单词查询工具，而且本身只要调用接口的话，就什么都出来了，这使得整个项目变的很简单。项目的所有功能依据也都是来自于个人的需求
 
