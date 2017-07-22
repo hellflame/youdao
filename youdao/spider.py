@@ -20,17 +20,17 @@ class Spider(object):
         try:
             req = requests.get(url, timeout=self.__timeout)
         except requests.Timeout:
-            sys.stderr.write('链接 `{}` 请求超时'.format(url))
+            sys.stderr.write('链接 `{}` 请求超时\r\n'.format(url))
             exit(1)
         except requests.ConnectionError:
-            sys.stderr.write('链接 `{}` 连接失败'.format(url))
+            sys.stderr.write('链接 `{}` 连接失败\r\n'.format(url))
             exit(1)
         except Exception:
-            sys.stderr.write('链接 `{}` 连接时发生未知错误')
+            sys.stderr.write('链接 `{}` 连接时发生未知错误\r\n')
             exit(1)
 
         if not req.status_code == 200:
-            sys.stderr.write('链接 `{}` 非法状态码: {}'.format(url, req.status_code))
+            sys.stderr.write('链接 `{}` 非法状态码: {}\r\n'.format(url, req.status_code))
             exit(1)
 
         yield bs4.BeautifulSoup(req.content, 'html.parser')
