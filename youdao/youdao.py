@@ -64,12 +64,10 @@ class Youdao:
                     temp += '  ' + j + ','
                 temp += '\n'
         else:
-            if 'web_translate' not in self.result:
-                return temp
-
-            temp += "网络释义 \033[01;34m>>>\033[00m\n"
-            for i in self.result['web_translate']:
-                temp += '\t{}\n'.format(i)
+            if 'web_translate' in self.result and self.result['web_translate']:
+                temp += "网络释义 \033[01;34m>>>\033[00m\n"
+                for i in self.result['web_translate']:
+                    temp += '\t{}\n'.format(i)
 
         return temp.strip()
 
