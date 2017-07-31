@@ -9,7 +9,7 @@ from sqlsaver import SQLSaver
 db_path = SQLSaver().db_path
 youdao = Youdao()
 
-__version__ = '4.0.2'
+__version__ = '4.0.3'
 __author__ = "hellflame"
 
 reload(sys)

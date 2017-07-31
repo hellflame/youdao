@@ -69,7 +69,10 @@ class Spider(object):
                         else:
                             title = _nt.get_text()
                             type_ = ''
-                        translate.append((type_ + title).replace('\n', ''))
+                        tmp = (type_ + title).replace('\n', '')
+                        if tmp.count(' ') > 4:
+                            tmp = tmp.replace("  ", '')
+                        translate.append(tmp)
 
                 # web translation
                 _web_trans = soup.find(id="tWebTrans")

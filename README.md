@@ -33,7 +33,7 @@ $ youdao
 $ youdao -h
 ```
 
-```
+```bash
 有道翻译终端程序
 
 Usage:
@@ -53,7 +53,7 @@ Usage:
 输入youdao + 想要查询的内容即可
 
 更多帮助信息
-https://github.com/hellflame/youdao/blob/v4.0.2/README.md
+https://github.com/hellflame/youdao/blob/v4.0.3/README.md
 ```
 
 #### 基本查询
@@ -64,7 +64,7 @@ $ youdao whatever
 
 终端输入`youdao` + 想要查询的`单词`或`句子`即可进行三重查询，`本地查询`/`个人服务器查询`/`有道网页查询`，从三种查询中获取最快的响应。
 
-```
+```bash
 基本释义 >>>
   [wɒt'evə]
   us. [wət'ɛvɚ]
@@ -81,7 +81,7 @@ $ youdao whatever -w
 $ youdao -w whatever
 ```
 
-```
+```bash
 网络释义 >>>
   Whatever
     WHATEVER,  Whatever,  诸如此类,
@@ -110,7 +110,7 @@ $ youdao -t whatever
 $ youdao linux is fine
 ```
 
-```
+```bash
 翻译     >>>
   linux是好
 ```
@@ -126,7 +126,7 @@ $ youdao whatever -a
 $ youdao -a whatever
 ```
 
-```
+```bash
 基本释义 >>>
   [wɒt'evə]
   us. [wət'ɛvɚ]
@@ -159,7 +159,7 @@ $ youdao hellflame
 
 > v4.0.0之后可能会有相似结果出现
 
-```
+```bash
 相关词语     >>>
   hotflame
   hotflame
@@ -342,6 +342,7 @@ $ source ~/.bashrc
 - 4.0.0 ==> 取消API调用
 - 4.0.1 ==> 修复在无基本释义情况下的显示策略问题
 - 4.0.2 ==> 修复无效翻译的无效输出问题以及其他小问题
+- 4.0.3 ==> 修复爬虫翻译结果空格过多的问题
 
 项目主要目的在于简单方便的终端查询，虽然功能在越来越多，但是一般能够用到的还是只有查询这一个功能。主要也在于linux系统中没有找到方便的单词查询工具，而且本身只要调用接口的话，就什么都出来了，这使得整个项目变的很简单。项目的所有功能依据也都是来自于个人的需求
 
