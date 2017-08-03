@@ -43,6 +43,7 @@ class YoudaoProtocol(LineReceiver):
                 del result['_id']
                 del result['key']
                 self.transport.write(json.dumps(result) + b'\r\n')
+            self.transport.loseConnection()
 
         def spider_error(err):
             self.transport.loseConnection()
@@ -53,6 +54,7 @@ class YoudaoProtocol(LineReceiver):
                 del result['_id']
                 del result['key']
                 self.transport.write(json.dumps(result) + b'\r\n')
+                self.transport.loseConnection()
 
             else:
                 # print "Spider Fetch"
