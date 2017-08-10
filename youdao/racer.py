@@ -21,7 +21,10 @@ class Race(object):
 
     def race(self, runner):
         with self.sem:
-            runner()
+            try:
+                runner()
+            except:
+                pass
 
     def local_sql_fetch(self):
         with Timeout(1):
