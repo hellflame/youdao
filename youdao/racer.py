@@ -21,10 +21,7 @@ class Race(object):
 
     def race(self, runner):
         with self.sem:
-            try:
-                runner()
-            except:
-                pass
+            runner()
 
     def local_sql_fetch(self):
         with Timeout(1):
@@ -52,8 +49,10 @@ class Race(object):
         self.pool.kill()
 
     def launch_race(self):
-        self.pool.map(self.race, [self.custom_server_fetch, self.official_server_fetch, self.local_sql_fetch])
-
+        try:
+            self.pool.map(self.race, [self.custom_server_fetch, self.official_server_fetch, self.local_sql_fetch])
+        except:
+            pass
 
 if __name__ == '__main__':
     race = Race('world')
