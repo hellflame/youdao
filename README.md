@@ -290,9 +290,9 @@ windows
 
 服务不会主动断开连接，并且直接响应每一行输入，返回目标json
 
-服务默认最高支持1024个连接
+服务默认最高支持1024个连接，更多连接数会abort(实际最高连接数量可以自行修改)
 
-作者可能在自己的服务器上开启这个端口访问，也可能不会！
+作者可能在自己的服务器上开启这个端口访问，也可能不会！(现在看来是不会了=。=)
 
 #### 版本信息
 
@@ -305,22 +305,29 @@ $ youdao --version
 
 > 添加于v3.3.0版本
 
-自动补全代码:
+可以将输出的bash脚本输出到用户目录的 *.bash_profile* 、*.bashrc* 等文件
 
 ```bash
+# 自动补全代码:
 $ youdao -cp
+
+# 输出到resource文件
+# on Mac OS
+$ youdao -cp >> ~/.bash_profile
+# on Linux
+$ youdao -cp >> ~/.bashrc
 ```
 
-可以将输出的bash脚本输出到用户目录的 *.bash_profile* 、*.bashrc* 等目录，若要立即生效，执行如下命令:
+若要立即生效，执行如下命令:
 
 ```bash 
 $ source ~/.bash_profile
 
-# or in Linux 
+# or on Linux 
 $ source ~/.bashrc
 ```
 
-> 由于对bash补全不是很熟悉，不排除会出现补全过程出现问题=。=
+> 由于对bash补全不是很熟悉，不排除会出现补全过程出现问题=。=，并且只有bash补全，对于zsh等其他shell，支持情况不明。
 
 ![](https://static.hellflame.net/resource/c26b182ef30500ffa3bc7373d5207036)
 
