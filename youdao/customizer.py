@@ -13,7 +13,7 @@ __author__ = "hellflame"
 class Customize(object):
     def __init__(self, target, host='hellflame.net', port=3697):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.settimeout(10)
+        self.socket.settimeout(7)
         self.target = target
         self.address = (host, port)
 
@@ -21,7 +21,7 @@ class Customize(object):
     def connection(self):
         try:
             self.socket.connect(self.address)
-            self.socket.send(self.target + b'\r\n')
+            self.socket.send(self.target.replace('\r\n', '') + b'\r\n')
             # just make this an easy way
             yield self.socket.recv(100000)
             self.socket.close()

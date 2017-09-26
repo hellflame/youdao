@@ -24,19 +24,19 @@ class Race(object):
             runner()
 
     def local_sql_fetch(self):
-        with Timeout(1):
+        with Timeout(1, False):
             result = self.sql_saver.query(self.phrase)
             if result:
                 self.racer_weapon(result, gun='sql')
 
     def custom_server_fetch(self):
-        with Timeout(5):
+        with Timeout(5, False):
             result = customizer.Customize(self.phrase).server_fetch()
             if result:
                 self.racer_weapon(result, gun='custom')
 
     def official_server_fetch(self):
-        with Timeout(7):
+        with Timeout(7, False):
             _, result = spider.Spider().deploy(self.phrase)
             if result:
                 self.racer_weapon(result, gun='official')
@@ -54,8 +54,9 @@ class Race(object):
         except:
             pass
 
+
 if __name__ == '__main__':
-    race = Race('world')
+    race = Race('donkey')
     race.launch_race()
     print race.result
 

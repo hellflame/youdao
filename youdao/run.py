@@ -157,6 +157,7 @@ def main():
             else:
                 print " (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(youdao.phrase)
 
+
 if __name__ == '__main__':
     main()
 
