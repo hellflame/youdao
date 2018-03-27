@@ -21,7 +21,11 @@ class Race(object):
 
     def race(self, runner):
         with self.sem:
-            runner()
+            try:
+                runner()
+            except Timeout:
+                # 继承自 BaseException，不能通过 Exception 截获异常
+                return
 
     def local_sql_fetch(self):
         with Timeout(1, False):
@@ -36,8 +40,9 @@ class Race(object):
                 self.racer_weapon(result, gun='custom')
 
     def official_server_fetch(self):
-        with Timeout(7, False):
-            _, result = spider.Spider().deploy(self.phrase)
+        timeout = 7
+        with Timeout(timeout, False):
+            _, result = spider.Spider(timeout=timeout).deploy(self.phrase)
             if result:
                 self.racer_weapon(result, gun='official')
 
@@ -49,14 +54,11 @@ class Race(object):
         self.pool.kill()
 
     def launch_race(self):
-        try:
-            self.pool.map(self.race, [self.custom_server_fetch, self.official_server_fetch, self.local_sql_fetch])
-        except:
-            pass
+        self.pool.map(self.race, [self.custom_server_fetch, self.official_server_fetch, self.local_sql_fetch])
 
 
 if __name__ == '__main__':
-    race = Race('donkey')
+    race = Race('what')
     race.launch_race()
     print race.result
 

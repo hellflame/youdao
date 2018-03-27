@@ -12,31 +12,38 @@ __author__ = "hellflame"
 class Spider(object):
     def __init__(self, lang='eng', timeout=3):
         self.__html_url = "http://dict.youdao.com/w/{}/".format(lang)
+        self.__headers = {
+            'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/65.0.3325.146 Safari/537.36",
+            "Cookie": "domain=.youdao.com"
+        }
         self.__timeout = timeout
 
     @contextmanager
     def soup(self, target_word):
         url = self.__html_url + urllib.quote(target_word.replace('/', ''))
         try:
-            req = requests.get(url, timeout=self.__timeout)
+            resp = requests.get(url, timeout=self.__timeout, headers=self.__headers)
+            if not resp.status_code == 200:
+                sys.stderr.write('链接 `{}` 非法状态码: {}\r\n'.format(url, resp.status_code))
+            else:
+                yield bs4.BeautifulSoup(resp.content, 'html.parser')
         except requests.Timeout:
             sys.stderr.write('链接 `{}` 请求超时\r\n'.format(url))
-            exit(1)
+            yield None
         except requests.ConnectionError:
             sys.stderr.write('链接 `{}` 连接失败\r\n'.format(url))
-            exit(1)
-        except Exception:
-            sys.stderr.write('链接 `{}` 连接时发生未知错误\r\n')
-            exit(1)
-
-        if not req.status_code == 200:
-            sys.stderr.write('链接 `{}` 非法状态码: {}\r\n'.format(url, req.status_code))
-            exit(1)
-
-        yield bs4.BeautifulSoup(req.content, 'html.parser')
+            yield None
+        except Exception as e:
+            sys.stderr.write('链接 `{}` 连接时发生未知错误\r\n'.format(e.message))
+            yield None
 
     def deploy(self, word):
         with self.soup(word) as soup:
+            if soup is None:
+                # 错误处理
+                return None, None
             match = soup.find(class_='keyword')
             if match:
                 # pronunciation
@@ -127,6 +134,7 @@ class Spider(object):
                         'possibles': possibles
                     }
                 return None, None
+
 
 if __name__ == '__main__':
     print Spider().deploy('chinese')
