@@ -1,15 +1,15 @@
 # coding=utf8
 from setuptools import setup, find_packages
-__author__ = 'hellflame'
+from youdao.youdao import __author__, __version__
 
 
 setup(
     name='YoudaoDict',
-    version="4.0.7",
+    version=__version__,
     keywords=('youdao', 'dict', 'partly offline dict', 'web spider'),
     description="通过有道爬虫查询单词",
     license='MIT',
-    author='hellflame',
+    author=__author__,
     author_email='hellflamedly@gmail.com',
     url="https://github.com/hellflame/youdao",
     packages=find_packages(),
