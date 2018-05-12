@@ -38,6 +38,10 @@ class SQLSaver(object):
                 return json.loads(unquote(result[0]))
             return None
 
+    def remove_query(self, query):
+        with self.connection() as cursor:
+            cursor.execute("delete from {} where query = '{}'".format(self.TABLE, query))
+
     def shred_query(self, shred):
         with self.connection() as cursor:
             if shred:

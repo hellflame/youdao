@@ -58,10 +58,13 @@ def main():
         if arg_len == 2:
             arg = argv[-1]
             if arg in ('-v', '--version'):
-                print 'YoudaoDict Version {}'.format(__version__)
+                print('YoudaoDict Version {}'.format(__version__))
             elif arg in ('-c', '--clean'):
-                os.remove(db_path)
-                print db_path + '  removed'
+                if os.path.exists(db_path):
+                    os.remove(db_path)
+                    print('`{}`  removed'.format(db_path))
+                else:
+                    print('`{}` not exists, doing nothing'.format(db_path))
             elif arg in ('-h', '--help'):
                 help_menu()
             elif arg in ('-cp', '--comp'):
@@ -104,6 +107,9 @@ def main():
                         print youdao.basic()
                         print youdao.web()
                         print youdao.trans()
+                    elif arg[0] in {'-c', '--clean'}:
+                        SQLSaver().remove_query(arg[1])
+                        print("removed `{}`".format(arg[1]))
                     else:
                         help_menu()
                 elif arg[0] == '--shard':

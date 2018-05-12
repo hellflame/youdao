@@ -70,7 +70,7 @@ class Spider(object):
                     for _nt in _normal_trans:
                         title = _nt.find(class_='contentTitle')
                         type_ = _nt.find('span')
-                        if title and type_:
+                        if title and type_ and title != type_:
                             title = title.get_text()
                             type_ = type_.get_text()
                         else:
