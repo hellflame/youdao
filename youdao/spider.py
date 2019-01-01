@@ -137,5 +137,5 @@ class Spider(object):
 
 
 if __name__ == '__main__':
-    print Spider().deploy('chinese')
+    print(Spider().deploy('chinese'))
 

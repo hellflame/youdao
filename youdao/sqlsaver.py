@@ -16,19 +16,16 @@ class SQLSaver(object):
 
     @contextmanager
     def connection(self):
-        try:
-            db = sqlite3.connect(self.db_path)
-            cursor = db.cursor()
-            cursor.execute("CREATE TABLE IF NOT EXISTS `{}` ("
-                           "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                           "query varchar(50) NOT NULL UNIQUE,"
-                           "raw_json TEXT NOT NULL DEFAULT '')".format(
-                            self.TABLE))
-            yield cursor
-            db.commit()
-            db.close()
-        except Exception as e:
-            raise e
+        db = sqlite3.connect(self.db_path)
+        cursor = db.cursor()
+        cursor.execute("CREATE TABLE IF NOT EXISTS `{}` ("
+                       "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                       "query varchar(50) NOT NULL UNIQUE,"
+                       "raw_json TEXT NOT NULL DEFAULT '')".format(
+                        self.TABLE))
+        yield cursor
+        db.commit()
+        db.close()
 
     def query(self, query):
         with self.connection() as cursor:
@@ -51,8 +48,7 @@ class SQLSaver(object):
             else:
                 cursor.execute("select query from {} limit 10".format(self.TABLE))
 
-            result = cursor.fetchall()
-            return result
+            return cursor.fetchall()
 
     def upset(self, query, raw_dict):
         with self.connection() as cursor:

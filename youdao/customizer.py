@@ -25,7 +25,7 @@ class Customize(object):
             # just make this an easy way
             yield self.socket.recv(100000)
             self.socket.close()
-        except Exception:
+        except:  # catch everything
             yield ''
 
     def server_fetch(self):

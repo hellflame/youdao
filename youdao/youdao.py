@@ -4,7 +4,7 @@ from functools import wraps
 from racer import Race
 from sqlsaver import SQLSaver
 __author__ = "hellflame"
-__version__ = "4.0.7.2"
+__version__ = "4.1.0"
 
 
 def void_return(fun):

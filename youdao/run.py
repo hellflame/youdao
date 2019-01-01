@@ -3,7 +3,7 @@
 
 import os
 import sys
-from youdao import Youdao, __version__, __author__
+from youdao import Youdao, __version__
 from sqlsaver import SQLSaver
 
 db_path = SQLSaver().db_path
@@ -38,15 +38,15 @@ short = {
 
 
 def help_menu():
-    print "\n有道翻译终端程序\n"
-    print "Usage:"
-    print "  youdao <word | phrase | sentence> [args...]\t参数后置，查询翻译或解释"
-    print "  youdao [args...] <word | phrase | sentence>\t参数前置，查询翻译或解释\n"
+    print("\n有道翻译终端程序\n")
+    print("Usage:")
+    print("  youdao <word | phrase | sentence> [args...]\t参数后置，查询翻译或解释")
+    print("  youdao [args...] <word | phrase | sentence>\t参数前置，查询翻译或解释\n")
     for i in map_target:
-        print "  {},{}\t{}".format(i, short[i], map_target[i])
+        print("  {},{}\t{}".format(i, short[i], map_target[i]))
 
-    print "\n输入\033[01;31myoudao + 想要查询的内容\033[00m即可\n"
-    print "更多帮助信息 \nhttps://github.com/hellflame/youdao/blob/v{}/README.md\n".format(__version__)
+    print("\n输入\033[01;31myoudao + 想要查询的内容\033[00m即可\n")
+    print("更多帮助信息 \nhttps://github.com/hellflame/youdao/blob/v{}/README.md\n".format(__version__))
 
 
 def main():
@@ -68,9 +68,9 @@ def main():
             elif arg in ('-h', '--help'):
                 help_menu()
             elif arg in ('-cp', '--comp'):
-                print youdao.complete_code()
+                print(youdao.complete_code())
             elif arg == '--shard':
-                print youdao.shred_auto_complete('')
+                print(youdao.shred_auto_complete(''))
             else:
                 if not arg.startswith("-"):
                     youdao.set_phrase(arg)
@@ -79,13 +79,13 @@ def main():
                     web_result = youdao.web()
                     trans = youdao.trans()
                     if result:
-                        print result
+                        print(result)
                     elif not result and youdao.valid and web_result:
-                        print web_result
+                        print(web_result)
                     elif not result and youdao.valid and trans:
-                        print trans
+                        print(trans)
                     else:
-                        print " (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(arg)
+                        print(" (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(arg))
                 else:
                     help_menu()
         elif arg_len == 3:
@@ -96,41 +96,41 @@ def main():
                     youdao.executor()
 
                     if arg[0] in ('-d', '--debug'):
-                        print youdao.check_raw()
+                        print(youdao.check_raw())
                     elif arg[0] in ('-w', '--web'):
-                        print youdao.web()
+                        print(youdao.web())
                     elif arg[0] in ('-t', '--trans'):
-                        print youdao.trans()
+                        print(youdao.trans())
                     elif arg[0] in ('-b', '--basic'):
-                        print youdao.basic()
+                        print(youdao.basic())
                     elif arg[0] in ('-a', '--all'):
-                        print youdao.basic()
-                        print youdao.web()
-                        print youdao.trans()
+                        print(youdao.basic())
+                        print(youdao.web())
+                        print(youdao.trans())
                     elif arg[0] in {'-c', '--clean'}:
                         SQLSaver().remove_query(arg[1])
                         print("removed `{}`".format(arg[1]))
                     else:
                         help_menu()
                 elif arg[0] == '--shard':
-                    print youdao.shred_auto_complete(arg[1])
+                    print(youdao.shred_auto_complete(arg[1]))
 
             elif arg[1].startswith('-'):
                 if not arg[0].startswith('-'):
                     youdao.set_phrase(arg[0])
                     youdao.executor()
                     if arg[1] in ('-d', '--debug'):
-                        print youdao.check_raw()
+                        print(youdao.check_raw())
                     elif arg[1] in ('-w', '--web'):
-                        print youdao.web()
+                        print(youdao.web())
                     elif arg[1] in ('-t', '--trans'):
-                        print youdao.trans()
+                        print(youdao.trans())
                     elif arg[1] in ('-b', '--basic'):
-                        print youdao.basic()
+                        print(youdao.basic())
                     elif arg[1] in ('-a', '--all'):
-                        print youdao.basic()
-                        print youdao.web()
-                        print youdao.trans()
+                        print(youdao.basic())
+                        print(youdao.web())
+                        print(youdao.trans())
                     else:
                         help_menu()
                 else:
@@ -141,11 +141,11 @@ def main():
                 youdao.executor()
                 result = youdao.basic()
                 if result:
-                    print result
+                    print(result)
                 elif not result and not youdao.is_new and youdao.valid:
-                    print youdao.trans()
+                    print(youdao.trans())
                 else:
-                    print " (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(youdao.phrase)
+                    print(" (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(youdao.phrase))
 
         elif arg_len == 4:
             arg = argv[1:]
@@ -154,11 +154,11 @@ def main():
             youdao.executor()
             result = youdao.basic()
             if result:
-                print result
+                print(result)
             elif youdao.result and not youdao.is_new and not result and youdao.valid:
-                print youdao.trans()
+                print(youdao.trans())
             else:
-                print " (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(youdao.phrase)
+                print(" (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(youdao.phrase))
 
 
 if __name__ == '__main__':
