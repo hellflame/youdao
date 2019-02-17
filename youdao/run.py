@@ -3,14 +3,16 @@
 
 import os
 import sys
-from youdao import Youdao, __version__
-from sqlsaver import SQLSaver
+from youdao.config import __version__
+from youdao.entry import Youdao
+from youdao.sqlsaver import SQLSaver
+
+reload(sys)
+sys.setdefaultencoding("utf8")
 
 db_path = SQLSaver().db_path
 youdao = Youdao()
 
-reload(sys)
-sys.setdefaultencoding("utf8")
 
 map_target = {
     '--trans': '直接翻译',

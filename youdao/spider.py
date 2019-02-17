@@ -4,9 +4,7 @@ import sys
 import bs4
 import urllib
 import requests
-
 from contextlib import contextmanager
-__author__ = "hellflame"
 
 
 class Spider(object):
@@ -22,6 +20,7 @@ class Spider(object):
 
     @contextmanager
     def soup(self, target_word):
+        """get bs soup context"""
         url = self.__html_url + urllib.quote(target_word.replace('/', ''))
         try:
             resp = requests.get(url, timeout=self.__timeout, headers=self.__headers)
@@ -40,9 +39,10 @@ class Spider(object):
             yield None
 
     def deploy(self, word):
+        """format spider raw data"""
         with self.soup(word) as soup:
             if soup is None:
-                # 错误处理
+                # error handle
                 return None, None
             match = soup.find(class_='keyword')
             if match:
@@ -102,11 +102,6 @@ class Spider(object):
                                 'phrase': title,
                                 'explain': i.get_text().replace('\n', '').replace(title, '').replace(' ', '')
                             })
-
-                # print word_phrase
-                # print translate
-                # print web_translate
-                # print pronounces
                 return 0, {
                     'pronounces': pronounces,
                     'translate': translate,

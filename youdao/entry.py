@@ -1,13 +1,14 @@
 # coding=utf8
+
 import json
 from functools import wraps
-from racer import Race
-from sqlsaver import SQLSaver
-__author__ = "hellflame"
-__version__ = "4.1.0"
+
+from youdao.racer import Race
+from youdao.sqlsaver import SQLSaver
 
 
 def void_return(fun):
+    """check void return"""
     @wraps(fun)
     def check(self):
         if not self.result or not self.valid:
@@ -95,7 +96,7 @@ class Youdao(object):
     def basic(self):
         temp = ""
         if not self.is_new:
-            data = self.result.get('basic', '')
+            data = self.result.get('basic', {})
             if not data:
                 return temp
             temp += "基本释义 \033[01;32m>>>\033[00m\n"
@@ -129,8 +130,7 @@ class Youdao(object):
     @staticmethod
     def shred_auto_complete(shred):
         shreds = SQLSaver().shred_query(shred)
-        temp = " ".join((x[0] for x in shreds if len(shreds) > 1 and not x[0] == shred or x[0].startswith(shred)))
-        return temp
+        return " ".join((x[0] for x in shreds if len(shreds) > 1 and not x[0] == shred or x[0].startswith(shred)))
 
     @staticmethod
     def complete_code():

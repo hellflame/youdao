@@ -1,13 +1,12 @@
 # coding=utf8
 """
-    fetch result from the backup server, default backup server hellflame.net:3679
+    fetch result from the backup server, default backup server hellflame.net:3679 (abandoned !)
     btw: customized server is not a must, but it will speed up a little the query progress
 """
 
 import socket
 import json
 from contextlib import contextmanager
-__author__ = "hellflame"
 
 
 class Customize(object):

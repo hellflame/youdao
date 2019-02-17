@@ -1,14 +1,17 @@
 # coding=utf8
-import spider
-import customizer
-import sqlsaver
+import sys
 from gevent.monkey import patch_all
 from gevent.pool import Pool
 from gevent.lock import BoundedSemaphore
 from gevent.timeout import Timeout
 
+from youdao.spider import Spider
+from youdao.customizer import Customize
+from youdao.sqlsaver import SQLSaver
+
 patch_all()
-__author__ = "hellflame"
+reload(sys)
+sys.setdefaultencoding("utf8")
 
 
 class Race(object):
@@ -17,7 +20,7 @@ class Race(object):
         self.pool = Pool()
         self.sem = BoundedSemaphore(3)
         self.result = None
-        self.sql_saver = sqlsaver.SQLSaver()
+        self.sql_saver = SQLSaver()
 
     def race(self, runner):
         """
@@ -40,7 +43,7 @@ class Race(object):
     def custom_server_fetch(self):
         """fetch result from customer server"""
         with Timeout(5, False):
-            result = customizer.Customize(self.phrase).server_fetch()
+            result = Customize(self.phrase).server_fetch()
             if result:
                 self.racer_weapon(result, gun='custom')
 
@@ -48,7 +51,7 @@ class Race(object):
         """fetch result from official site"""
         timeout = 7
         with Timeout(timeout, False):
-            _, result = spider.Spider(timeout=timeout).deploy(self.phrase)
+            _, result = Spider(timeout=timeout).deploy(self.phrase)
             if result:
                 self.racer_weapon(result, gun='official')
 
@@ -60,13 +63,17 @@ class Race(object):
         :return:
         """
         self.result = bullet
-        # print(gun)
         if not gun == 'sql' and 'possibles' not in bullet:
             self.sql_saver.upset(self.phrase, bullet)
         self.pool.kill()
 
     def launch_race(self):
-        self.pool.map(self.race, [self.custom_server_fetch, self.official_server_fetch, self.local_sql_fetch])
+        """start race"""
+        self.pool.map(self.race, [
+            self.custom_server_fetch,
+            self.official_server_fetch,
+            self.local_sql_fetch
+        ])
 
 
 

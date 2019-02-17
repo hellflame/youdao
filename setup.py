@@ -1,6 +1,6 @@
 # coding=utf8
 from setuptools import setup, find_packages
-from youdao.youdao import __author__, __version__
+from youdao.config import __author__, __version__
 
 
 setup(
