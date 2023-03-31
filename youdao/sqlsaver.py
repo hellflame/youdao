@@ -4,7 +4,11 @@ import os
 import json
 import sqlite3
 from contextlib import contextmanager
-from urllib import quote, unquote
+
+try:
+    from urllib.parse import quote, unquote
+except ImportError:
+    from urllib import quote, unquote
 
 from youdao.config import DB_PATH
 

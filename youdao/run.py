@@ -7,8 +7,9 @@ from youdao.config import __version__
 from youdao.entry import Youdao
 from youdao.sqlsaver import SQLSaver
 
-reload(sys)
-sys.setdefaultencoding("utf8")
+if sys.version_info.major == 2:
+    reload(sys)
+    sys.setdefaultencoding("utf8")
 
 db_path = SQLSaver().db_path
 youdao = Youdao()

@@ -1,6 +1,8 @@
 # coding=utf8
 import sys
 from gevent.monkey import patch_all
+patch_all()
+
 from gevent.pool import Pool
 from gevent.lock import BoundedSemaphore
 from gevent.timeout import Timeout
@@ -9,9 +11,9 @@ from youdao.spider import Spider
 from youdao.customizer import Customize
 from youdao.sqlsaver import SQLSaver
 
-patch_all()
-reload(sys)
-sys.setdefaultencoding("utf8")
+if sys.version_info.major == 2:
+    reload(sys)
+    sys.setdefaultencoding("utf8")
 
 
 class Race(object):

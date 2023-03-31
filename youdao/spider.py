@@ -2,9 +2,13 @@
 
 import sys
 import bs4
-import urllib
 import requests
 from contextlib import contextmanager
+
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
 
 
 class Spider(object):
@@ -21,7 +25,7 @@ class Spider(object):
     @contextmanager
     def soup(self, target_word):
         """get bs soup context"""
-        url = self.__html_url + urllib.quote(target_word.replace('/', ''))
+        url = self.__html_url + quote(target_word.replace('/', ''))
         try:
             resp = requests.get(url, timeout=self.__timeout, headers=self.__headers)
             if not resp.status_code == 200:
