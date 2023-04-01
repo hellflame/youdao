@@ -61,7 +61,7 @@ Usage:
 输入youdao + 想要查询的内容即可
 
 更多帮助信息
-https://github.com/hellflame/youdao/blob/v4.2.0/README.md
+https://github.com/hellflame/youdao/blob/master/README.md
 ```
 
 #### 基本查询
@@ -387,3 +387,7 @@ $ source ~/.bashrc
 > PS. 由于对之前版本的兼容性考虑不是很多，之前版本的数据库中的查询结果可能会导致一些问题=。=，可能需要删除一下原始的数据库，执行 `youdao -c` 删除之前版本的数据库或者手动删除`rm ~/.youdao.sqlite3.db`
 
 以上
+
+> v5.0.0
+
+针对 py310 进行兼容支持
