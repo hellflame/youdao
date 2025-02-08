@@ -37,16 +37,16 @@ $ echo export PATH=$PATH:/Users/<username>/Library/Python/2.7/bin/ > ~/.bash_pro
 #### 帮助菜单
 
 ```bash
-$ youdao
-$ youdao -h
+$ query
+$ query -h
 ```
 
 ```bash
 有道翻译终端程序
 
 Usage:
-  youdao <word | phrase | sentence> [args...] 参数后置，查询翻译或解释
-  youdao [args...] <word | phrase | sentence> 参数前置，查询翻译或解释
+  query <word | phrase | sentence> [args...] 参数后置，查询翻译或解释
+  query [args...] <word | phrase | sentence> 参数前置，查询翻译或解释
 
   --basic,-b  基本释义
   --debug,-d  调试模式
@@ -67,7 +67,7 @@ https://github.com/hellflame/youdao/blob/master/README.md
 #### 基本查询
 
 ```bash
-$ youdao whatever
+$ query whatever
 ```
 
 终端输入`youdao` + 想要查询的`单词`或`句子`即可进行三重查询，`本地查询`/`个人服务器查询`/`有道网页查询`，从三种查询中获取最快的响应。
@@ -85,8 +85,8 @@ $ youdao whatever
 #### 网络释义
 
 ```bash
-$ youdao whatever -w
-$ youdao -w whatever
+$ query whatever -w
+$ query -w whatever
 ```
 
 ```bash
@@ -106,8 +106,8 @@ $ youdao -w whatever
 1.
 
 ```bash
-$ youdao whatever -t
-$ youdao -t whatever
+$ query whatever -t
+$ query -t whatever
 ```
 
 在目标单词或前或后添加`-t`参数，即可获取该单词的对应翻译
@@ -115,7 +115,7 @@ $ youdao -t whatever
 2.
 
 ```bash
-$ youdao linux is fine
+$ query linux is fine
 ```
 
 ```bash
@@ -130,8 +130,8 @@ $ youdao linux is fine
 #### 所有查询结果
 
 ```bash
-$ youdao whatever -a
-$ youdao -a whatever
+$ query whatever -a
+$ query -a whatever
 ```
 
 ```bash
@@ -160,7 +160,7 @@ $ youdao -a whatever
 当找不到查询的单词或句子时，将会提示没有这个单词或句子的结果
 
 ```bash
-$ youdao hellflame
+$ query hellflame
 
  (╯▔皿▔ )╯ hellflame ㄟ(▔皿▔ ㄟ)
 ```
@@ -179,7 +179,7 @@ $ youdao hellflame
 #### 清除用户数据库
 
 ```bash
-$ youdao -c
+$ query -c
 ```
 
 用户数据库所在位置`~/.youdao.sqlite3.db`，sqlite3
@@ -187,7 +187,7 @@ $ youdao -c
 > v4.0.7.2 之后支持删除给定数据库中单词的数据，通过以下命令删除：
 
 ```bash
-$ youdao -c <query>
+$ query -c <query>
 ```
 
 删除用户数据库并不会影响在线状态下的继续使用
@@ -199,8 +199,8 @@ $ youdao -c <query>
 #### 调试状态
 
 ```bash
-$ youdao whatever -d
-$ youdao -d whatever
+$ query whatever -d
+$ query -d whatever
 ```
 
 ```json
@@ -282,7 +282,7 @@ $ youdao -d whatever
 服务器中的查询结果当然也是来自于爬虫，预想中是如果有很多人查询的话，相同的结果就会更快的得到响应，从而加速查询。所以如果某一个单词是第一次被请求的话，服务器就要先使用爬虫，然后再返回结果，如果没有网络原因的话，应该比本地的爬虫要慢一点。
 
 ```bash
-$ service.youdao
+$ service.query
 ```
 
 该命令默认会在本地3697端口开启TCP服务
@@ -311,8 +311,8 @@ windows
 #### 版本信息
 
 ```bash
-$ youdao -v
-$ youdao --version
+$ query -v
+$ query --version
 ```
 
 ### bash自动补全
@@ -323,13 +323,13 @@ $ youdao --version
 
 ```bash
 # 自动补全代码:
-$ youdao -cp
+$ query -cp
 
 # 输出到resource文件
 # on Mac OS
-$ youdao -cp >> ~/.bash_profile
+$ query -cp >> ~/.bash_profile
 # on Linux
-$ youdao -cp >> ~/.bashrc
+$ query -cp >> ~/.bashrc
 ```
 
 若要立即生效，执行如下命令:

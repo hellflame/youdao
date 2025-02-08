@@ -1,3 +1,7 @@
-bs4
-requests
-gevent
+bs4~=0.0.2
+httpx~=0.28.1
+
+uvicorn~=0.34.0
+fastapi~=0.115.8
+
+aiosqlite~=0.21.0

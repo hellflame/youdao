@@ -1,81 +1,45 @@
-# coding=utf8
-import sys
-from gevent.monkey import patch_all
-patch_all()
-
-from gevent.pool import Pool
-from gevent.lock import BoundedSemaphore
-from gevent.timeout import Timeout
+import asyncio
 
 from youdao.spider import Spider
 from youdao.customizer import Customize
-from youdao.sqlsaver import SQLSaver
-
-if sys.version_info.major == 2:
-    reload(sys)
-    sys.setdefaultencoding("utf8")
+from youdao.storage import Storage
 
 
 class Race(object):
-    def __init__(self, phrase=''):
-        self.phrase = phrase.lower()
-        self.pool = Pool()
-        self.sem = BoundedSemaphore(3)
-        self.result = None
-        self.sql_saver = SQLSaver()
+    async def run(self, phrase, serve_mode=False):
+        storage = Storage()
+        sources = [Spider(), storage]
+        if not serve_mode:
+            sources.insert(1, Customize())
+        parse_map = {
+            type(s).__name__: s.parse for s in sources
+        }
+        tasks = []
+        for s in sources:
+            tasks.append(asyncio.create_task(self.with_cancel_task(s.fetch(phrase),
+                                                                   [t for t in tasks]),
+                                             name=type(s).__name__))
+        done, pending = await asyncio.wait(tasks, timeout=5)
+        for p in pending:
+            p.cancel()
 
-    def race(self, runner):
-        """
-        let runners run for themselves
-        :param runner: callable runner
-        """
-        with self.sem:
-            try:
-                runner()
-            except Timeout:  # 继承自 BaseException，不能通过 Exception 截获异常
-                pass
+        for d in done:
+            t_name = d.get_name()
+            r = d.result()
+            if r:
+                parsed = parse_map[t_name](r)
+                if parsed and t_name != "Storage" and 'possibles' not in parsed:
+                    await storage.upset(phrase, parsed)
+                return parsed
 
-    def local_sql_fetch(self):
-        """fetch local cache from sqlite"""
-        with Timeout(1, False):
-            result = self.sql_saver.query(self.phrase)
-            if result:
-                self.racer_weapon(result, gun='sql')
-
-    def custom_server_fetch(self):
-        """fetch result from customer server"""
-        with Timeout(5, False):
-            result = Customize(self.phrase).server_fetch()
-            if result:
-                self.racer_weapon(result, gun='custom')
-
-    def official_server_fetch(self):
-        """fetch result from official site"""
-        timeout = 7
-        with Timeout(timeout, False):
-            _, result = Spider(timeout=timeout).deploy(self.phrase)
-            if result:
-                self.racer_weapon(result, gun='official')
-
-    def racer_weapon(self, bullet, gun):
-        """
-        bullet to stop the race
-        :param bullet: result for the game
-        :param gun: winner name
-        :return:
-        """
-        self.result = bullet
-        if not gun == 'sql' and 'possibles' not in bullet:
-            self.sql_saver.upset(self.phrase, bullet)
-        self.pool.kill()
-
-    def launch_race(self):
-        """start race"""
-        self.pool.map(self.race, [
-            self.custom_server_fetch,
-            self.official_server_fetch,
-            self.local_sql_fetch
-        ])
-
-
-
+    @staticmethod
+    async def with_cancel_task(t, cancels):
+        r = None
+        try:
+            r = await t
+        except asyncio.exceptions.CancelledError:
+            pass
+        if cancels and r:
+            for c in cancels:
+                c.cancel()
+        return r
