@@ -1,14 +1,7 @@
 # youdao
 
 > 曾经通过[有道翻译API](http://fanyi.youdao.com/openapi)进行终端单词，翻译查询，由于这个接口将于2017年年底关闭，故采用网页爬虫的形式进行
-
-> 在连续写了很多公司代码之后，重新审视了一下项目代码，发现很多面向对象开发的范式要求都没有被很好的遵守，导致后期维护变的比较麻烦而难以理解，这种心情就像第一次发现测试开发有多重要的时候感觉一样。
-
-__该项目代码应该在较长时间内不会有大的更新__ (如果有小的bug修复应该会及时更新，毕竟这也是自己常用的小工具)，之后如果有较多时间，可能会考虑整体的重构，主要是
-
-1. python3 的兼容(这可能是一个漫长的过程)
-2. 终端命令行解析
-3. 测试用例
+> 从6.0版本后，仅支持py3.9及以上版本安装
 
 ### 安装
 
@@ -19,16 +12,18 @@ $ sudo pip install youdaodict --upgrade
 MacOS 中如果出现权限问题的话
 
 ```bash
-$ pip install youdaodict --upgrade --user
-
 # 仅为当前用户安装
+$ pip install youdaodict --upgrade --user
 ```
 
-可执行脚本将被安装在`/Users/<username>/Library/Python/2.7/bin/`，将此路径添加进环境变量`PATH`中即可，或者
+可执行脚本将被安装在`~/Library/Python/<pyversion>/bin/`，将此路径添加进环境变量`PATH`中即可，或者
 
 ```bash
-$ echo export PATH=$PATH:/Users/<username>/Library/Python/2.7/bin/ > ~/.bash_profile
+# bash
+$ echo export PATH=$PATH:~/Library/Python/<pyversion>/bin/ > ~/.bash_profile
 ```
+
+> 替换 <pyversion> 为实际解释器版本
 
 ### 使用
 
@@ -37,16 +32,16 @@ $ echo export PATH=$PATH:/Users/<username>/Library/Python/2.7/bin/ > ~/.bash_pro
 #### 帮助菜单
 
 ```bash
-$ query
-$ query -h
+$ youdao
+$ youdao -h
 ```
 
 ```bash
 有道翻译终端程序
 
 Usage:
-  query <word | phrase | sentence> [args...] 参数后置，查询翻译或解释
-  query [args...] <word | phrase | sentence> 参数前置，查询翻译或解释
+  youdao <word | phrase | sentence> [args...] 参数后置，查询翻译或解释
+  youdao [args...] <word | phrase | sentence> 参数前置，查询翻译或解释
 
   --basic,-b  基本释义
   --debug,-d  调试模式
@@ -67,7 +62,7 @@ https://github.com/hellflame/youdao/blob/master/README.md
 #### 基本查询
 
 ```bash
-$ query whatever
+$ youdao whatever
 ```
 
 终端输入`youdao` + 想要查询的`单词`或`句子`即可进行三重查询，`本地查询`/`个人服务器查询`/`有道网页查询`，从三种查询中获取最快的响应。
@@ -85,8 +80,8 @@ $ query whatever
 #### 网络释义
 
 ```bash
-$ query whatever -w
-$ query -w whatever
+$ youdao whatever -w
+$ youdao -w whatever
 ```
 
 ```bash
@@ -103,19 +98,15 @@ $ query -w whatever
 
 #### 翻译查询
 
-1.
-
 ```bash
-$ query whatever -t
-$ query -t whatever
+$ youdao whatever -t
+$ youdao -t whatever
 ```
 
 在目标单词或前或后添加`-t`参数，即可获取该单词的对应翻译
 
-2.
-
 ```bash
-$ query linux is fine
+$ youdao linux is fine
 ```
 
 ```bash
@@ -130,8 +121,8 @@ $ query linux is fine
 #### 所有查询结果
 
 ```bash
-$ query whatever -a
-$ query -a whatever
+$ youdao whatever -a
+$ youdao -a whatever
 ```
 
 ```bash
@@ -160,7 +151,7 @@ $ query -a whatever
 当找不到查询的单词或句子时，将会提示没有这个单词或句子的结果
 
 ```bash
-$ query hellflame
+$ youdao hellflame
 
  (╯▔皿▔ )╯ hellflame ㄟ(▔皿▔ ㄟ)
 ```
@@ -179,7 +170,7 @@ $ query hellflame
 #### 清除用户数据库
 
 ```bash
-$ query -c
+$ youdao -c
 ```
 
 用户数据库所在位置`~/.youdao.sqlite3.db`，sqlite3
@@ -187,7 +178,7 @@ $ query -c
 > v4.0.7.2 之后支持删除给定数据库中单词的数据，通过以下命令删除：
 
 ```bash
-$ query -c <query>
+$ youdao -c <query>
 ```
 
 删除用户数据库并不会影响在线状态下的继续使用
@@ -199,8 +190,8 @@ $ query -c <query>
 #### 调试状态
 
 ```bash
-$ query whatever -d
-$ query -d whatever
+$ youdao whatever -d
+$ youdao -d whatever
 ```
 
 ```json
@@ -251,25 +242,25 @@ $ query -d whatever
 
 ```json
 {
+  "pronounces": [
+    "英[wɒtˈevə(r)]",
+    "美[wətˈevər]"
+  ],
   "translate": [
-    "adj. \u4e0d\u7ba1\u4ec0\u4e48\u6837\u7684",
-    "pron. \u65e0\u8bba\u4ec0\u4e48\uff1b\u8bf8\u5982\u6b64\u7c7b",
-    "conj. \u65e0\u8bba\u4ec0\u4e48"
+    "det. 任何……的事物，无论什么",
+    "pron. 任何事物；究竟是什么；无所谓，什么都可以； <非正式>名叫某某的东西（用于指称不知道的东西）",
+    "adv. 任何，丝毫（表强调）；<非正式>不管怎样",
+    "conj. 不管什么，无论什么；任何…...的事物，凡是…...的东西",
+    "int. （表示勉强接受）随便你怎么说"
   ],
   "web_translate": [
-    "\u65e0\u8bba\u4ec0\u4e48",
-    "\u8bf8\u5982\u6b64\u7c7b",
-    "\u65e0\u6240\u8c13",
-    "\u529b\u6240\u80fd\u53ca"
-  ],
-  "pronounces": [
-    "\u82f1[w\u0252t'ev\u0259]",
-    "\u7f8e[w\u0259t'\u025bv\u025a]"
+    "无论什么",
+    "诸如此类",
+    "无所谓",
+    "任何方式"
   ]
 }
 ```
-
-
 
 如果出现怀疑查询结果与实际看到的输出不一致的情况的话，使用调试选项，输出从API获取的返回json输出，json未经过更易读的编码调整，如果真的需要的话，需要其他工具进行进一步转换
 
@@ -282,37 +273,28 @@ $ query -d whatever
 服务器中的查询结果当然也是来自于爬虫，预想中是如果有很多人查询的话，相同的结果就会更快的得到响应，从而加速查询。所以如果某一个单词是第一次被请求的话，服务器就要先使用爬虫，然后再返回结果，如果没有网络原因的话，应该比本地的爬虫要慢一点。
 
 ```bash
-$ service.query
+$ yd-serve
 ```
 
-该命令默认会在本地3697端口开启TCP服务
+该命令默认会在本地3697端口开启HTTP服务
 
 > 测试
 
 ```bash
-$ telnet localhost 3697
-Trying ::1...
-telnet: connect to address ::1: Connection refused
-Trying 127.0.0.1...
-Connected to localhost.
-Escape character is '^]'.
-linux
-{"insert_time": 1499742022, "pronounces": ["\u82f1[\u02c8la\u026an\u028cks;\u02c8l\u026an\u028cks]", "\u7f8e[\u02c8l\u026an\u0259ks]"], "used": 6, "web_translate": ["\u64cd\u4f5c\u7cfb\u7edf", "\u6b63\u7248", "\u5e38\u7528\u547d\u4ee4", "\u9884\u88c5"], "translate": ["n. Linux\u64cd\u4f5c\u7cfb\u7edf\uff08\u4e00\u79cd\u7c7b\u4f3c\u4e8eUNIX\u7684\u8ba1\u7b97\u673a\u64cd\u4f5c\u7cfb\u7edf\uff09"]}
-windows
-{"insert_time": 1499742054, "pronounces": ["['w\u026andoz]"], "used": 1, "web_translate": ["\u7a97\u53e3\u64cd\u4f5c\u7cfb\u7edf", "\u8981\u6c42", "\u9700\u6c42", "\u7a97\u53e3"], "translate": ["n. \u5fae\u8f6f\u516c\u53f8\u751f\u4ea7\u7684\u201c\u89c6\u7a97\u201d\u64cd\u4f5c\u7cfb\u7edf"]}
+$ curl http://127.0.0.0:3697/query?phrase=<word>
 ```
 
-服务不会主动断开连接，并且直接响应每一行输入，返回目标json
+可通过环境变量 `YD_HOST` 修改 HOST 以及 `YD_PORT` 修改 PORT
 
-服务默认最高支持1024个连接，更多连接数会abort(实际最高连接数量可以自行修改)
+如果本地 `youdao` 命令与服务一起使用，建议在服务进程启动前设置环境变量 `YD_STORAGE` 到新的服务数据存储地址。 `youdao` 命令默认访问的自定义服务地址可通过环境变量 `YD_SERVICE` 控制，默认为 `http://127.0.0.1:3679/query`，可替换为实际自定义服务地址.
 
-作者可能在自己的服务器上开启这个端口访问，也可能不会！(现在看来是不会了=。=)
+> 需要根据提示安装相关依赖，主要是FastAPI等
 
 #### 版本信息
 
 ```bash
-$ query -v
-$ query --version
+$ youdao -v
+$ youdao --version
 ```
 
 ### bash自动补全
@@ -323,13 +305,13 @@ $ query --version
 
 ```bash
 # 自动补全代码:
-$ query -cp
+$ youdao -cp
 
 # 输出到resource文件
 # on Mac OS
-$ query -cp >> ~/.bash_profile
+$ youdao -cp >> ~/.bash_profile
 # on Linux
-$ query -cp >> ~/.bashrc
+$ youdao -cp >> ~/.bashrc
 ```
 
 若要立即生效，执行如下命令:
@@ -342,8 +324,6 @@ $ source ~/.bashrc
 ```
 
 > 由于对bash补全不是很熟悉，不排除会出现补全过程出现问题=。=，并且只有bash补全，对于zsh等其他shell，支持情况不明。
-
-![](https://static.hellflame.net/resource/c26b182ef30500ffa3bc7373d5207036)
 
 ### 开发历程
 
@@ -391,3 +371,9 @@ $ source ~/.bashrc
 > v5.0.0
 
 针对 py310 进行兼容支持
+
+> v6.0.0
+
+用 `async` 重写了所有核心模块，包的构建信息从 `setup.py` 迁移至 `pyproject.toml`。从此仅支持py3.9及更新版本的python。
+
+自定义服务器从tcp服务修改为更简单的http服务，使用FastAPI调用异步接口实现。
