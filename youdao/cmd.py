@@ -1,18 +1,12 @@
-#!/usr/bin/env python2.7
-# coding=utf8
-
 import os
 import sys
-from youdao.config import __version__
-from youdao.entry import Youdao
-from youdao.sqlsaver import SQLSaver
+from youdao import __version__
+from youdao.query import Query
+from youdao.storage import Storage
 
-if sys.version_info.major == 2:
-    reload(sys)
-    sys.setdefaultencoding("utf8")
 
-db_path = SQLSaver().db_path
-youdao = Youdao()
+db_path = Storage().db_path
+query = Query()
 
 
 map_target = {
@@ -24,7 +18,7 @@ map_target = {
     '--clean': "清除数据库",
     "--version": "版本信息",
     '--debug': "调试模式",
-    '--comp': "自动补全"
+    '--comp': "自动补全",
 }
 
 short = {
@@ -43,13 +37,17 @@ short = {
 def help_menu():
     print("\n有道翻译终端程序\n")
     print("Usage:")
-    print("  youdao <word | phrase | sentence> [args...]\t参数后置，查询翻译或解释")
-    print("  youdao [args...] <word | phrase | sentence>\t参数前置，查询翻译或解释\n")
+    print("  query <word | phrase | sentence> [args...]\t参数后置，查询翻译或解释")
+    print("  query [args...] <word | phrase | sentence>\t参数前置，查询翻译或解释\n")
     for i in map_target:
         print("  {},{}\t{}".format(i, short[i], map_target[i]))
 
     print("\n输入\033[01;31myoudao + 想要查询的内容\033[00m即可\n")
-    print("更多帮助信息 \nhttps://github.com/hellflame/youdao/blob/v{}/README.md\n".format(__version__))
+    print("更多帮助信息 \nhttps://github.com/hellflame/query/blob/v{}/README.md\n".format(__version__))
+
+
+def debug(q):
+    print(q.check_raw())
 
 
 def main():
@@ -71,21 +69,33 @@ def main():
             elif arg in ('-h', '--help'):
                 help_menu()
             elif arg in ('-cp', '--comp'):
-                print(youdao.complete_code())
+                print("""###-begin-query-completion-###
+# simple youdaoDict word auto completion script
+# Installation: query -cp >> ~/.bashrc  (or ~/.zshrc)
+# or query -cp >> ~/.bash_profile (.etc)
+#
+_youdao_parser_options()
+{
+  local curr_arg;
+  curr_arg=${COMP_WORDS[COMP_CWORD]}
+  COMPREPLY=( $(compgen -W "$(query --shard $curr_arg)" $curr_arg ) );
+}
+complete -F _youdao_parser_options query
+###-end-query-completion-###""")
             elif arg == '--shard':
-                print(youdao.shred_auto_complete(''))
+                print(query.shred_auto_complete(''))
             else:
                 if not arg.startswith("-"):
-                    youdao.set_phrase(arg)
-                    youdao.executor()
-                    result = youdao.basic()
-                    web_result = youdao.web()
-                    trans = youdao.trans()
+                    query.set_phrase(arg)
+                    query.executor()
+                    result = query.basic()
+                    web_result = query.web()
+                    trans = query.trans()
                     if result:
                         print(result)
-                    elif not result and youdao.valid and web_result:
+                    elif not result and query.valid and web_result:
                         print(web_result)
-                    elif not result and youdao.valid and trans:
+                    elif not result and query.valid and trans:
                         print(trans)
                     else:
                         print(" (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(arg))
@@ -95,73 +105,73 @@ def main():
             arg = argv[1:]
             if arg[0].startswith('-'):
                 if not arg[0] == '--shard' and not arg[1].startswith("-"):
-                    youdao.set_phrase(arg[1])
-                    youdao.executor()
+                    query.set_phrase(arg[1])
+                    query.executor()
 
                     if arg[0] in ('-d', '--debug'):
-                        print(youdao.check_raw())
+                        debug(query)
                     elif arg[0] in ('-w', '--web'):
-                        print(youdao.web())
+                        print(query.web())
                     elif arg[0] in ('-t', '--trans'):
-                        print(youdao.trans())
+                        print(query.trans())
                     elif arg[0] in ('-b', '--basic'):
-                        print(youdao.basic())
+                        print(query.basic())
                     elif arg[0] in ('-a', '--all'):
-                        print(youdao.basic())
-                        print(youdao.web())
-                        print(youdao.trans())
+                        print(query.basic())
+                        print(query.web())
+                        print(query.trans())
                     elif arg[0] in {'-c', '--clean'}:
-                        SQLSaver().remove_query(arg[1])
+                        Storage().remove_query(arg[1])
                         print("removed `{}`".format(arg[1]))
                     else:
                         help_menu()
                 elif arg[0] == '--shard':
-                    print(youdao.shred_auto_complete(arg[1]))
+                    print(query.shred_auto_complete(arg[1]))
 
             elif arg[1].startswith('-'):
                 if not arg[0].startswith('-'):
-                    youdao.set_phrase(arg[0])
-                    youdao.executor()
+                    query.set_phrase(arg[0])
+                    query.executor()
                     if arg[1] in ('-d', '--debug'):
-                        print(youdao.check_raw())
+                        debug(query)
                     elif arg[1] in ('-w', '--web'):
-                        print(youdao.web())
+                        print(query.web())
                     elif arg[1] in ('-t', '--trans'):
-                        print(youdao.trans())
+                        print(query.trans())
                     elif arg[1] in ('-b', '--basic'):
-                        print(youdao.basic())
+                        print(query.basic())
                     elif arg[1] in ('-a', '--all'):
-                        print(youdao.basic())
-                        print(youdao.web())
-                        print(youdao.trans())
+                        print(query.basic())
+                        print(query.web())
+                        print(query.trans())
                     else:
                         help_menu()
                 else:
                     help_menu()
             else:
                 temp = " ".join(arg)
-                youdao.set_phrase(temp.strip('-'))
-                youdao.executor()
-                result = youdao.basic()
+                query.set_phrase(temp.strip('-'))
+                query.executor()
+                result = query.basic()
                 if result:
                     print(result)
-                elif not result and not youdao.is_new and youdao.valid:
-                    print(youdao.trans())
+                elif not result and not query.is_new and query.valid:
+                    print(query.trans())
                 else:
-                    print(" (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(youdao.phrase))
+                    print(" (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(query.phrase))
 
         elif arg_len == 4:
             arg = argv[1:]
             temp = " ".join(arg)
-            youdao.set_phrase(temp.strip('-'))
-            youdao.executor()
-            result = youdao.basic()
+            query.set_phrase(temp.strip('-'))
+            query.executor()
+            result = query.basic()
             if result:
                 print(result)
-            elif youdao.result and not youdao.is_new and not result and youdao.valid:
-                print(youdao.trans())
+            elif query.result and not query.is_new and not result and query.valid:
+                print(query.trans())
             else:
-                print(" (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(youdao.phrase))
+                print(" (╯▔皿▔ )╯ \033[01;31m{}\033[00m ㄟ(▔皿▔ ㄟ)".format(query.phrase))
 
 
 if __name__ == '__main__':

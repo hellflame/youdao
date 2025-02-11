@@ -1,10 +1,10 @@
-# coding=utf8
-
 import json
+import asyncio
+import traceback
 from functools import wraps
 
 from youdao.racer import Race
-from youdao.sqlsaver import SQLSaver
+from youdao.storage import Storage
 
 
 def void_return(fun):
@@ -18,13 +18,23 @@ def void_return(fun):
     return check
 
 
-class Youdao(object):
+class Query(object):
     def __init__(self, phrase=''):
         self.phrase = phrase.lower()
         self.result = {}
         self.valid = True
         self.raw = ''
         self.is_new = False
+
+    @staticmethod
+    def run_async(t):
+        loop = asyncio.get_event_loop()
+        try:
+            return loop.run_until_complete(t)
+        except:
+            traceback.print_exc()
+        finally:
+            loop.close()
 
     def set_phrase(self, phrase):
         self.phrase = phrase.lower()
@@ -44,14 +54,13 @@ class Youdao(object):
                 self.valid = False
 
     def executor(self):
-        race = Race(self.phrase)
-        race.launch_race()
-        self.result = race.result
+        race = Race()
+        self.result = self.run_async(race.run(self.phrase))
         self.valid_check()
         return self.result
 
     def check_raw(self):
-        return json.dumps(self.result, indent=2)
+        return json.dumps(self.result, indent=2, ensure_ascii=False)
 
     @void_return
     def web(self):
@@ -127,30 +136,13 @@ class Youdao(object):
 
         return temp
 
-    @staticmethod
-    def shred_auto_complete(shred):
-        shreds = SQLSaver().shred_query(shred)
+    def shred_auto_complete(self, shred):
+        shreds = self.run_async(Storage().shred_query(shred))
         return " ".join((x[0] for x in shreds if len(shreds) > 1 and not x[0] == shred or x[0].startswith(shred)))
-
-    @staticmethod
-    def complete_code():
-        return """###-begin-youdao-completion-###
-# simple youdaoDict word auto completion script
-# Installation: youdao -cp >> ~/.bashrc  (or ~/.zshrc)
-# or youdao -cp >> ~/.bash_profile (.etc)
-#
-_youdao_parser_options()
-{
-  local curr_arg;
-  curr_arg=${COMP_WORDS[COMP_CWORD]}
-  COMPREPLY=( $(compgen -W "$(youdao --shard $curr_arg)" $curr_arg ) );
-}
-complete -F _youdao_parser_options youdao
-###-end-youdao-completion-###"""
 
 
 if __name__ == '__main__':
-    youdao = Youdao()
-    print (youdao.shred_auto_complete('f'))
-
-
+    import logging
+    logging.basicConfig(level=logging.INFO,
+                        format="%(levelname)s:%(asctime)s|%(module)s|%(message)s")
+    print(Query("linux").executor())

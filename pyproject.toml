@@ -1,0 +1,33 @@
+[project]
+name = "YoudaoDict"
+dynamic = ["version"]
+authors = [{ name = "hellflame" }]
+description = "通过有道爬虫查询单词"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "bs4",
+    "httpx",
+    "aiosqlite"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.9",
+    "Environment :: Console",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX"
+]
+license = {text = "MIT"}
+
+[project.scripts]
+youdao = "youdao.cmd:main"
+yd-serve = "youdao.serve:main"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+version = {attr = "youdao.__version__"}

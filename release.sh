@@ -1,5 +1,10 @@
 #!/bin/bash
 
-python2 setup.py sdist bdist_egg bdist_wheel
+source venv/bin/activate
+pip install -U build twine
 
-python3 setup.py bdist_egg bdist_wheel
+rm -rf dist
+
+python -m build --sdist --wheel
+
+twine upload dist/*
