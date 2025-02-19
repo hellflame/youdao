@@ -377,3 +377,7 @@ $ source ~/.bashrc
 用 `async` 重写了所有核心模块，包的构建信息从 `setup.py` 迁移至 `pyproject.toml`。从此仅支持py3.9及更新版本的python。
 
 自定义服务器从tcp服务修改为更简单的http服务，使用FastAPI调用异步接口实现。
+
+> v6.1.0
+
+重写cmd模块，简化命令行的实现和响应

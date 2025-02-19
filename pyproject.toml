@@ -3,6 +3,7 @@ name = "YoudaoDict"
 dynamic = ["version"]
 authors = [{ name = "hellflame" }]
 description = "通过有道爬虫查询单词"
+keywords = ["有道", "翻译", "youdao", "crawler", "spider"]
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
@@ -20,6 +21,12 @@ classifiers = [
     "Operating System :: POSIX"
 ]
 license = {text = "MIT"}
+
+[project.urls]
+Homepage = "https://github.com/hellflame/youdao"
+Repository = "https://github.com/hellflame/youdao"
+Issues = "https://github.com/hellflame/youdao/issues"
+Changelog = "https://github.com/hellflame/youdao?tab=readme-ov-file#%E5%BC%80%E5%8F%91%E5%8E%86%E7%A8%8B"
 
 [project.scripts]
 youdao = "youdao.cmd:main"
