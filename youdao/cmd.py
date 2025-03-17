@@ -8,7 +8,7 @@ from youdao.storage import Storage
 def parse(args=None):
     parser = argparse.ArgumentParser(
         description="有道翻译终端程序",
-        epilog="更多帮助信息 \nhttps://github.com/hellflame/query/blob/v{}/README.md\n".format(__version__)
+        epilog="更多帮助信息 \nhttps://github.com/hellflame/youdao/blob/v{}/README.md\n".format(__version__)
     )
 
     parser.add_argument("words", nargs="*", help="查询内容")

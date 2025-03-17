@@ -14,11 +14,10 @@ class Race(object):
         parse_map = {
             type(s).__name__: s.parse for s in sources
         }
-        tasks = []
-        for s in sources:
-            tasks.append(asyncio.create_task(self.with_cancel_task(s.fetch(phrase),
-                                                                   [t for t in tasks]),
-                                             name=type(s).__name__))
+        origin = [asyncio.create_task(s.fetch(phrase), name=type(s).__name__) for s in sources]
+        tasks = [asyncio.create_task(
+            self.with_cancel_task(o, [t for t in origin if t != o]),
+            name=o.get_name()) for o in origin]
         done, pending = await asyncio.wait(tasks, timeout=5)
         for p in pending:
             p.cancel()
