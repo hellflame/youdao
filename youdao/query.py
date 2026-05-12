@@ -28,7 +28,13 @@ class Query(object):
 
     @staticmethod
     def run_async(t):
-        loop = asyncio.get_event_loop()
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            # Python 3.14+ get_event_loop 行为变更
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
         try:
             return loop.run_until_complete(t)
         except:
