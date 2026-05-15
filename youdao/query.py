@@ -28,7 +28,8 @@ class Query(object):
 
     @staticmethod
     def run_async(t):
-        loop = asyncio.get_event_loop()
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
         try:
             return loop.run_until_complete(t)
         except:
